@@ -190,7 +190,7 @@ angular.module('angularUikit', [])
         element += '<tr data-ng-repeat="m in model track by $index">';
         element += '<td class="uk-table-middle" data-ng-repeat="s in structure">';
         element += '<div ng-if="s.type!=\'array\'">{{m[s.property]}}</div>';
-        element += '<div ng-if="s.type==\'array\'" uk-json-table-form data-model="m[s.property]" structure="s.items"></div>';
+        element += '<div ng-if="s.type==\'array\'" uk-ng-json-table-form data-model="m[s.property]" structure="s.items"></div>';
         element += '</td>';
         element += '<td class="uk-table-middle"><div class="uk-float-right"><button type="button" ng-click="removeItem($index)" class="uk-button uk-button-danger uk-button-small"><i class="uk-icon-trash"></i></button></div></td>';
         element += '</tr>';
