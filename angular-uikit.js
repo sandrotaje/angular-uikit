@@ -1,4 +1,4 @@
-angular.module('angularUikit')
+angular.module('angularUikit', [])
     .directive('ukAutocomplete', function ($http, $timeout) {
         return {
             restrict: 'A',
