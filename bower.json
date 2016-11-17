@@ -12,10 +12,6 @@
   ],
   "license": "MIT",
   "homepage": "",
-  "dependencies": {
-    "uikit": "^2.26.3",
-    "angular": "^1.3"
-  },
   "overrides": {
     "uikit": {
       "main": [
@@ -30,5 +26,5 @@
       ]
     }
   },
-  "version": "0.0.3"
+  "version": "0.0.4"
 }
