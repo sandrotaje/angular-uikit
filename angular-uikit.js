@@ -51,7 +51,7 @@ angular.module('angularUikit', [])
                 };
 
                 scope.$watch('model.id + model.name', function () {
-                    if(scope.model.id){
+                    if(scope.model.id || scope.model.name){
                         ngModel.$setViewValue({
                             id: scope.model.id,
                             value: scope.model.value
@@ -64,7 +64,7 @@ angular.module('angularUikit', [])
                 })];
 
                 ngModel.$parsers.unshift(function (value) {
-                    if (value instanceof Object && value.id) {
+                    if (value instanceof Object) {
                         return scope.ukSource[value.id];
                     }
                     return undefined;
