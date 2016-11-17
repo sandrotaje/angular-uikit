@@ -12,5 +12,19 @@
   ],
   "license": "MIT",
   "homepage": "",
-  "version": "0.0.2"
+  "overrides": {
+    "uikit": {
+      "main": [
+        "js/uikit.min.js",
+        "js/components/accordion.min.js",
+        "js/components/pagination.min.js",
+        "js/components/autocomplete.min.js",
+        "fonts/fontawesome-webfont.ttf",
+        "fonts/fontawesome-webfont.woff",
+        "fonts/fontawesome-webfont.woff2",
+        "fonts/FontAwesome.otf"
+      ]
+    }
+  },
+  "version": "0.0.4"
 }
