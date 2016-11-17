@@ -38,7 +38,6 @@ angular.module('angularUikit', [])
 
                 ngModel.$render = function () {
                     var viewValue = ngModel.$viewValue;
-
                     if (viewValue) {
                         elem.val(viewValue.value);
 
@@ -52,10 +51,12 @@ angular.module('angularUikit', [])
                 };
 
                 scope.$watch('model.id + model.name', function () {
-                    ngModel.$setViewValue({
-                        id: scope.model.id,
-                        value: scope.model.value
-                    });
+                    if(scope.model.id){
+                        ngModel.$setViewValue({
+                            id: scope.model.id,
+                            value: scope.model.value
+                        });
+                    }
                 });
 
                 ngModel.$formatters = [(function (value) {
@@ -63,7 +64,7 @@ angular.module('angularUikit', [])
                 })];
 
                 ngModel.$parsers.unshift(function (value) {
-                    if (value instanceof Object) {
+                    if (value instanceof Object && value.id) {
                         return scope.ukSource[value.id];
                     }
                     return undefined;
@@ -101,7 +102,7 @@ angular.module('angularUikit', [])
             scope: {
                 listSize: '=',
                 pageSize: '=',
-                onPageChange: '='
+                onPageChange: '&'
             },
             link: function (scope, element, attrs) {
                 var ukPaginationOptions = {
@@ -116,7 +117,7 @@ angular.module('angularUikit', [])
                 window.pag = pagination;
 
                 element.on('select.uk.pagination', function (e, pageIndex) {
-                    scope.onPageChange(pageIndex);
+                    scope.onPageChange({$page: pageIndex});
                 });
 
                 scope.$watch('listSize', function () {
@@ -132,7 +133,7 @@ angular.module('angularUikit', [])
                 });
             }
         };
-    }).directive('ukNgJsonTableForm', function ($compile) {
+    }).directive('ukNgJsonTableForm', function ($compile, $timeout) {
     return {
         restrict: "EA",
         scope: {
@@ -140,12 +141,12 @@ angular.module('angularUikit', [])
             structure: "="
         },
         link: function (scope, element, attrs) {
+            scope.newItem = {};
             if (!scope.model) {
                 scope.model = [];
             }
-            var table = generateTable(scope.model, scope.structure, "first");
+            var table = generateTable(scope.model, scope.structure);
             element.append($compile(angular.element(table))(scope));
-            //scope.$apply();
 
             scope.addItem = function () {
                 scope.model.push(angular.copy(scope.newItem));
@@ -153,7 +154,13 @@ angular.module('angularUikit', [])
             };
 
             scope.removeItem = function removeItem(index) {
-                scope.model.splice(index, 1);
+
+                UIkit.modal.confirm("Sei sicuro?", function () {
+                    $timeout(function () {
+                        scope.model.splice(index, 1)
+                    });
+                });
+
             };
 
             scope.generateTable = generateTable;
@@ -161,40 +168,64 @@ angular.module('angularUikit', [])
         }
     };
 
-    function generateTable(model, structure, name) {
-        var element = '<form name="newItemForm" class="uk-form uk-form-stacked" novalidate><fieldset><table class="uk-table uk-table-striped">';
+    function generateTable(model, structure) {
+        var element = '<form name="newItemForm" class="uk-form uk-form-stacked" ng-submit="addItem()" novalidate><fieldset><table ng-init="table.hasChild = false" class="uk-table uk-ng-table-form">';
 
         //creating header
         element += '<thead><tr>';
-        element += '<th data-ng-repeat="h in structure"><span ng-hide="h.type==\'array\' && model.length<=0">{{h.label}}</span></th>';
-        element += '<th></th></tr></thead>';
+        element += '<th data-ng-repeat="h in structure">';
+        element += '<div ng-switch="h.type">';
+        element += '<div ng-switch-when="array" ng-init="table.hasChild = true"></div>';
+        element += '<span ng-switch-default><i ng-if="h.icon" class="uk-icon-{{h.icon}}"></i> {{h.label}}</span>';
+        element += '</div>';
+        element += '</th>';
+        element += '<th></th>';
+        element += '</tr></thead>';
 
         //---------------------
 
         element += '<tbody>';
+
+        element += '<tr class="uk-table-middle" data-ng-repeat="m in model track by $index" ng-init="row.index=$index+1">';
+        element += '<td data-ng-repeat="s in structure">';
+        element += '<div ng-switch="s.type">';
+
+
+        element += '<div ng-switch-when="array" class="uk-accordion" data-uk-accordion="{showfirst: false, collapse: false, toggle: \'.uk-accordion-title-{{s.property}}\', containers:\'.uk-accordion-content-{{s.property}}\'}">';
+        element += '<a ng-init="accordion.show = false" ng-click="accordion.show=!accordion.show" class="uk-width-1-1 uk-button uk-button-primary uk-button-large uk-accordion-title-{{s.property}}"><span class="uk-float-left"><i ng-if="s.icon" class="uk-icon-{{s.icon}}"></i> {{m[s.property].length}} {{s.label}} </span> <span class="uk-float-right"><i ng-hide="accordion.show" class="uk-icon-caret-right"></i><i ng-show="accordion.show" class="uk-icon-caret-down"></i></span></a>';
+        element += '<div class="uk-accordion-content-{{s.property}}">';
+        element += '<div data-uk-ng-json-table-form data-model="m[s.property]" data-structure="s.items"></div>';
+        element += '</div></div>';
+        element += '<div ng-switch-when="autocomplete">{{m[s.property][s.autocomplete.label]?m[s.property][s.autocomplete.label]:m[s.property]}}</div>';
+        element += '<div ng-switch-when="select">{{m[s.property][s.select.label]}}</div>';
+        element += '<div ng-switch-when="sequence" ng-init="m.sequence = row.index">{{m.sequence}}</div>';
+        element += '<div ng-switch-default>{{m[s.property]}}</div>';
+
+        element += '</div>';
+        element += '</td>';
+        element += '<td style="padding:0 0 1px 0"><button type="button" class="uk-button uk-text-danger uk-width-1-1 uk-height-1-1" ng-click="removeItem($index)"><i class="uk-icon-trash uk-icon-small"></i></button></td>';
+        element += '</tr>';
+
         //creating input
         element += '<tr>';
 
-        structure.forEach(function (el) {
-            if (el.type != "array") {
-                element += '<td><input data-ng-model="newItem.' + el.property + '" type="' + el.type + '" class="uk-width-1-1" placeholder="" title="" required></td>';
-            } else {
-                element += '<td></td>';
-            }
-        });
-        element += '<td><button class="uk-button uk-button-primary uk-button-small uk-float-right" ng-disabled="newItemForm.$invalid" ng-click="addItem()">{{"ADD" | translate}}</button></td>';
+        element += '<td data-ng-repeat="h in structure">';
+
+        element += '<div ng-switch="h.type">';
+
+        element += '<span ng-switch-when="array"><button type="submit" style="width:80px" ng-class="{\'uk-text-success\': newItemForm.$valid}" class="uk-button uk-float-left" data-ng-disabled="newItemForm.$invalid"><i class="uk-icon-plus uk-icon-small"></i></button></span>';
+        element += '<span ng-switch-when="sequence">#</span>';
+        element += '<select name="{{h.property}}" ng-switch-when="select" data-ng-model="newItem[h.property]" class="uk-width-1-1" ng-options="opt[h.select.label] for opt in h.select.options track by opt[h.select.id]" required />';
+        element += '<div ng-switch-when="autocomplete" class="uk-autocomplete uk-form uk-width-1-1"><input name="{{h.property}}" type="text" placeholder="{{h.placeholder?h.placeholder:\'\'}}" class="uk-width-1-1" ng-model="newItem[h.property]" data-uk-source="h.autocomplete.source" data-uk-label="h.autocomplete.label" uk-ng-autocomplete required></div>';
+        element += '<input name="{{h.property}}" ng-switch-when="number" data-ng-model="newItem[h.property]" type="number" class="uk-width-1-1" data-ng-max="{{h.number.max}}" data-ng-min="{{h.number.min}}" required>';
+        element += '<input name="{{h.property}}" ng-switch-default data-ng-model="newItem[h.property]" type="{{h.type}}" placeholder="{{h.placeholder?h.placeholder:\'\'}}" class="uk-width-1-1" ng-required="h.required">';
+
+        element += '</div>';
+        element += '</td>';
+
+        element += '<td><button ng-if="!table.hasChild" ng-class="{\'uk-text-success\': newItemForm.$valid}" type="submit" class="uk-button" style="width:80px" data-ng-disabled="newItemForm.$invalid"><i class="uk-icon-plus uk-icon-small"></i></button></td>';
         element += '</tr>';
         //-----------------------
-
-
-        element += '<tr data-ng-repeat="m in model track by $index">';
-        element += '<td class="uk-table-middle" data-ng-repeat="s in structure">';
-        element += '<div ng-if="s.type!=\'array\'">{{m[s.property]}}</div>';
-        element += '<div ng-if="s.type==\'array\'" uk-json-table-form data-model="m[s.property]" structure="s.items"></div>';
-        element += '</td>';
-        element += '<td class="uk-table-middle"><div class="uk-float-right"><button type="button" ng-click="removeItem($index)" class="uk-button uk-button-danger uk-button-small"><i class="uk-icon-trash"></i></button></div></td>';
-        element += '</tr>';
-
 
         element += '</tbody>';
         element += '</table></fieldset></form>';
