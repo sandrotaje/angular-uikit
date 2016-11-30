@@ -138,7 +138,8 @@ angular.module('angularUikit', [])
         restrict: "EA",
         scope: {
             model: "=",
-            structure: "="
+            structure: "=",
+            onlyread: "="
         },
         link: function (scope, element, attrs) {
             scope.newItem = {};
@@ -179,7 +180,7 @@ angular.module('angularUikit', [])
         element += '<span ng-switch-default><i ng-if="h.icon" class="uk-icon-{{h.icon}}"></i> {{h.label}}</span>';
         element += '</div>';
         element += '</th>';
-        element += '<th></th>';
+        element += '<th ng-if="!onlyread"></th>';
         element += '</tr></thead>';
 
         //---------------------
@@ -194,7 +195,7 @@ angular.module('angularUikit', [])
         element += '<div ng-switch-when="array" class="uk-accordion" data-uk-accordion="{showfirst: false, collapse: false, toggle: \'.uk-accordion-title-{{s.property}}\', containers:\'.uk-accordion-content-{{s.property}}\'}">';
         element += '<a ng-init="accordion.show = false" ng-click="accordion.show=!accordion.show" class="uk-width-1-1 uk-button uk-button-primary uk-button-large uk-accordion-title-{{s.property}}"><span class="uk-float-left"><i ng-if="s.icon" class="uk-icon-{{s.icon}}"></i> {{m[s.property].length}} {{s.label}} </span> <span class="uk-float-right"><i ng-hide="accordion.show" class="uk-icon-caret-right"></i><i ng-show="accordion.show" class="uk-icon-caret-down"></i></span></a>';
         element += '<div class="uk-accordion-content-{{s.property}}">';
-        element += '<div data-uk-ng-json-table-form data-model="m[s.property]" data-structure="s.items"></div>';
+        element += '<div data-uk-ng-json-table-form data-model="m[s.property]" data-structure="s.items" data-onlyread="onlyread"></div>';
         element += '</div></div>';
         element += '<div ng-switch-when="autocomplete">{{m[s.property][s.autocomplete.label]?m[s.property][s.autocomplete.label]:m[s.property]}}</div>';
         element += '<div ng-switch-when="select">{{m[s.property][s.select.label]}}</div>';
@@ -203,11 +204,11 @@ angular.module('angularUikit', [])
 
         element += '</div>';
         element += '</td>';
-        element += '<td style="padding:0 0 1px 0"><button type="button" class="uk-button uk-text-danger uk-width-1-1 uk-height-1-1" ng-click="removeItem($index)"><i class="uk-icon-trash uk-icon-small"></i></button></td>';
+        element += '<td ng-if="!onlyread" style="padding:0 0 1px 0"><button type="button" class="uk-button uk-text-danger uk-width-1-1 uk-height-1-1" ng-click="removeItem($index)"><i class="uk-icon-trash uk-icon-small"></i></button></td>';
         element += '</tr>';
 
         //creating input
-        element += '<tr>';
+        element += '<tr ng-if="!onlyread">';
 
         element += '<td data-ng-repeat="h in structure">';
 
