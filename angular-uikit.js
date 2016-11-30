@@ -186,8 +186,8 @@ angular.module('angularUikit', [])
 
         element += '<tbody>';
 
-        element += '<tr class="uk-table-middle" data-ng-repeat="m in model track by $index" ng-init="row.index=$index+1">';
-        element += '<td data-ng-repeat="s in structure">';
+        element += '<tr class="" data-ng-repeat="m in model track by $index" ng-init="row.index=$index+1">';
+        element += '<td data-ng-repeat="s in structure" ng-class="{\'uk-table-middle\': s.type!= \'array\'}">';
         element += '<div ng-switch="s.type">';
 
 
@@ -213,7 +213,7 @@ angular.module('angularUikit', [])
 
         element += '<div ng-switch="h.type">';
 
-        element += '<span ng-switch-when="array"><button type="submit" style="width:80px" ng-class="{\'uk-text-success\': newItemForm.$valid}" class="uk-button uk-float-left" data-ng-disabled="newItemForm.$invalid"><i class="uk-icon-plus uk-icon-small"></i></button></span>';
+        element += '<span ng-switch-when="array"></span>';
         element += '<span ng-switch-when="sequence">#</span>';
         element += '<select name="{{h.property}}" ng-switch-when="select" data-ng-model="newItem[h.property]" class="uk-width-1-1" ng-options="opt[h.select.label] for opt in h.select.options track by opt[h.select.id]" required />';
         element += '<div ng-switch-when="autocomplete" class="uk-autocomplete uk-form uk-width-1-1"><input name="{{h.property}}" type="text" placeholder="{{h.placeholder?h.placeholder:\'\'}}" class="uk-width-1-1" ng-model="newItem[h.property]" data-uk-source="h.autocomplete.source" data-uk-label="h.autocomplete.label" uk-ng-autocomplete required></div>';
@@ -223,7 +223,7 @@ angular.module('angularUikit', [])
         element += '</div>';
         element += '</td>';
 
-        element += '<td><button ng-if="!table.hasChild" ng-class="{\'uk-text-success\': newItemForm.$valid}" type="submit" class="uk-button" style="width:80px" data-ng-disabled="newItemForm.$invalid"><i class="uk-icon-plus uk-icon-small"></i></button></td>';
+        element += '<td><button  ng-class="{\'uk-text-success\': newItemForm.$valid}" type="submit" class="uk-button" style="width:80px" data-ng-disabled="newItemForm.$invalid"><i class="uk-icon-plus uk-icon-small"></i></button></td>';
         element += '</tr>';
         //-----------------------
 
