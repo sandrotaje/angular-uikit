@@ -139,7 +139,8 @@ angular.module('angularUikit', [])
         scope: {
             model: "=",
             structure: "=",
-            onlyread: "="
+            onlyread: "=",
+            allHeaderInHead: "="
         },
         link: function (scope, element, attrs) {
             scope.newItem = {};
@@ -164,6 +165,39 @@ angular.module('angularUikit', [])
 
             };
 
+            scope.getHeaders = function(struct) {
+                var firstRow = [];
+                var secondRow = [];
+                var countNotArray = function(array) {
+                    return array.filter(function(el) {
+                        return el.type != 'array';
+                    }).length;
+                };
+                var first = true;
+                var recur = function(arr){
+                    arr.forEach(function(s) {
+                        if (s.type != 'array') {
+                            if (first) {
+                                firstRow.push({colspan:1});
+                            }
+                            secondRow.push(s);
+                        } else {
+                            first = false;
+
+                            var colspan = countNotArray(s.items);
+
+                            firstRow.push({
+                                label: s.label,
+                                colspan: colspan
+                            });
+                            recur(s.items);
+                        }
+                    });
+                };
+                recur(struct);
+                return {firstRow: firstRow, secondRow: secondRow};
+            };
+
             scope.generateTable = generateTable;
 
         }
@@ -173,7 +207,7 @@ angular.module('angularUikit', [])
         var element = '<form name="newItemForm" class="uk-form uk-form-stacked" ng-submit="addItem()" novalidate><fieldset><table ng-init="table.hasChild = false" class="uk-table uk-ng-table-form">';
 
         //creating header
-        element += '<thead><tr>';
+        element += '<thead ng-if="!allHeaderInHead"><tr>';
         element += '<th data-ng-repeat="h in structure">';
         element += '<div ng-switch="h.type">';
         element += '<div ng-switch-when="array" ng-init="table.hasChild = true"></div>';
@@ -182,6 +216,11 @@ angular.module('angularUikit', [])
         element += '</th>';
         element += '<th ng-if="!onlyread"></th>';
         element += '</tr></thead>';
+        element += '<thead ng-if="allHeaderInHead" ng-init="thead = getHeaders(structure)">' +
+            '<tr><th data-ng-repeat="h in thead.firstRow" colspan="{{h.colspan}}">{{h.label}}</th></tr>' +
+            '<tr><th data-ng-repeat="h in thead.secondRow">{{h.label}}</th></tr></thead>';
+
+
 
         //---------------------
 
@@ -195,7 +234,7 @@ angular.module('angularUikit', [])
         element += '<div ng-switch-when="array" class="uk-accordion" data-uk-accordion="{showfirst: false, collapse: false, toggle: \'.uk-accordion-title-{{s.property}}\', containers:\'.uk-accordion-content-{{s.property}}\'}">';
         element += '<a ng-init="accordion.show = false" ng-click="accordion.show=!accordion.show" class="uk-width-1-1 uk-button uk-button-primary uk-button-large uk-accordion-title-{{s.property}}"><span class="uk-float-left"><i ng-if="s.icon" class="uk-icon-{{s.icon}}"></i> {{m[s.property].length}} {{s.label}} </span> <span class="uk-float-right"><i ng-hide="accordion.show" class="uk-icon-caret-right"></i><i ng-show="accordion.show" class="uk-icon-caret-down"></i></span></a>';
         element += '<div class="uk-accordion-content-{{s.property}}">';
-        element += '<div data-uk-ng-json-table-form data-model="m[s.property]" data-structure="s.items" data-onlyread="onlyread"></div>';
+        element += '<div data-uk-ng-json-table-form data-model="m[s.property]" data-structure="s.items" data-onlyread="onlyread" data-allHeaderInHead="allHeaderInHead"></div>';
         element += '</div></div>';
         element += '<div ng-switch-when="autocomplete">{{m[s.property][s.autocomplete.label]?m[s.property][s.autocomplete.label]:m[s.property]}}</div>';
         element += '<div ng-switch-when="select">{{m[s.property][s.select.label]}}</div>';
