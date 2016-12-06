@@ -331,7 +331,7 @@ angular.module('angularUikit', [])
 
 
                 scope.years = [2014,2015,2016,2017];
-                scope.months = ["Genuary", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+                scope.months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
                 scope.yearSelected = date.getUTCFullYear();
                 scope.monthSelected = scope.months[date.getUTCMonth()];
