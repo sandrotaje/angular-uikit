@@ -271,4 +271,147 @@ angular.module('angularUikit', [])
         element += '</table></fieldset></form>';
         return element;
     }
+}).directive('ukNgCalendar', function () {
+    return {
+        restrict: "EA",
+        scope: {
+            date: "=?",
+            getEventsByDate: "=?"
+        },
+        template: "<div class=\"uk-grid uk-grid-collapse calendar\"><div class=\"uk-width-1-1 calendar-nav\"><a href=\"\" class=\"uk-icon-hover uk-icon-chevron-left\" ng-click=\"addMonth(-1)\"></a>        <div class=\"uk-form-select\" data-uk-form-select=\"{target:'a'}\">            <a>{{monthSelected}}</a>            <select ng-model=\"monthSelected\" ng-change=\"changeDate()\">                <option data-ng-repeat=\"m in months\" ng-value=\"m\">{{m}}</option>            </select>        </div>        <div class=\"uk-form-select\" data-uk-form-select=\"{target:'a'}\">            <a>{{yearSelected}}</a>            <select ng-model=\"yearSelected\" ng-change=\"changeDate()\">                <option data-ng-repeat=\"y in years | orderBy\" ng-value=\"y\">{{y}}</option>            </select>        </div>        <a href=\"\" class=\"uk-icon-hover uk-icon-chevron-right\" ng-click=\"addMonth(1)\"></a>    </div>    <div class=\"uk-width-1-1 calendar-header\">        <div class=\"uk-grid uk-grid-collapse calendar-header\">            <div class=\"uk-width calendar-header-day\" style=\"width: calc(100%/7)\"                 data-ng-repeat=\"d in ['Lun','Mar','Mer','Gio','Ven','Sab','Dom']\">                <div class=\"uk-panel uk-panel-box\">                    <h3 class=\"uk-panel-title\">{{d}}</h3>                </div>            </div>        </div>    </div>    <div class=\"uk-width-1-1 calendar-body\">        <div class=\"uk-grid uk-grid-collapse\" data-ng-repeat=\"w in month.weeks\" data-uk-grid-match=\"{target:'.uk-panel'}\">            <div class=\"uk-width calendar-day\" style=\"width: calc(100%/7)\" data-ng-repeat=\"d in w\" ng-click=\"toggleDay(d)\">                <div class=\"uk-panel uk-panel-box uk-panel-hover\" ng-class=\"{'active':d.isSelected}\">                    <h3 class=\"uk-panel-title\" ng-class=\"{'calendar-different-month-day':d.differentMonth}\"><i class=\"uk-icon-calendar\"></i> {{d.number}}</h3>                    <div class=\"uk-badge\" data-ng-repeat=\"e in d.events\">{{e.content}}</div>                </div>            </div>        </div>        <!--<div data-ng-repeat-end class=\"uk-block calendar-day-detail\" ng-if=\"hasDaySelected(w)\">-->            <!--Dettaglio-->        <!--</div>-->    </div></div>",
+        link: function (scope, element, attrs) {
+
+            scope.hasDaySelected = function(w) {
+                if (!w) return false;
+                for (var i = 0; i<w.length; i++) {
+                    var el = w[i];
+                    if (el.isSelected) return true;
+                }
+                return false;
+            };
+
+            scope.toggleDay = function(day) {
+                day.isSelected = !day.isSelected;
+                scope.month.weeks.forEach(function(w) {
+                    w.forEach(function(d) {
+                        if (day.date !== d.date) {
+                            d.isSelected = false;
+                        }
+                    });
+                });
+            };
+
+            scope.changeDate = function() {
+                scope.date = new Date(Date.UTC(scope.yearSelected, scope.months.indexOf(scope.monthSelected), 1));
+            };
+
+            scope.addMonth = function(num) {
+
+                var futureMonth = scope.date.getUTCMonth() + num;
+
+                //11 is december
+                if (futureMonth > 11) {
+                    scope.date = new Date(Date.UTC(scope.date.getUTCFullYear() + 1, 0, 1));
+                } else if (futureMonth < 0) {
+                    scope.date = new Date(Date.UTC(scope.date.getUTCFullYear() - 1, 11, 1));
+                } else {
+                    scope.date = new Date(Date.UTC(scope.date.getUTCFullYear(), futureMonth, 1));
+                }
+
+            };
+
+
+            scope.$watch("date", function() {
+
+                if (!scope.date) {
+                    scope.date = new Date();
+                }
+
+                var date = angular.copy(scope.date);
+
+
+                scope.years = [2014,2015,2016,2017];
+                scope.months = ["Genuary", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+
+                scope.yearSelected = date.getUTCFullYear();
+                scope.monthSelected = scope.months[date.getUTCMonth()];
+
+
+                date.setUTCHours(0);
+                date.setUTCMinutes(0);
+                date.setUTCSeconds(0);
+                date.setUTCMilliseconds(0);
+
+                var today = new Date();
+                today.setUTCHours(0);
+                today.setUTCMinutes(0);
+                today.setUTCSeconds(0);
+                today.setUTCMilliseconds(0);
+
+                var startDate = new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), 1));
+
+                while(startDate.getUTCDay() != 1) {
+                    startDate = new Date(startDate.getTime() - 24*60*60*1000);
+                }
+
+                var tmpDay = startDate;
+
+                var month = {
+                    weeks: []
+                };
+
+
+                var generateMonth = function(tmpDay, eventMap) {
+                    var week = 0;
+                    for(var i = 0; i<42; i++) {
+
+                        if (tmpDay.getUTCDay() == 1) {
+                            week++;
+                        }
+
+                        var jsonDay = {
+                            number: tmpDay.getUTCDate(),
+                            isToday: tmpDay.getTime() === today.getTime(),
+                            date: tmpDay,
+                            differentMonth: tmpDay.getUTCMonth() !== date.getUTCMonth(),
+                            events: eventMap[tmpDay]
+                        };
+                        if (!month.weeks[week]) {
+                            month.weeks[week] = [];
+                        }
+                        month.weeks[week].push(jsonDay);
+                        tmpDay = new Date(tmpDay.getTime() + 24*60*60*1000);
+                    }
+
+                    scope.month = month;
+                };
+
+                if (!scope.getEventsByDate) {
+                    generateMonth(tmpDay, []);
+                } else {
+                    scope.getEventsByDate().then(function(events) {
+                        var eventMap = {};
+                        events.forEach(function(e) {
+                            var tmpDay = e.startDate;
+                            while(tmpDay <= e.endDate) {
+                                if (!eventMap[tmpDay]) {
+                                    eventMap[tmpDay] = [];
+                                }
+                                eventMap[tmpDay].push(e);
+                                tmpDay = new Date(tmpDay.getTime() + 24*60*60*1000);
+                            }
+                        });
+
+                        generateMonth(tmpDay, eventMap);
+                    }, function(error) {
+                        console.log(error);
+                    })
+                }
+
+
+            });
+
+
+        }
+    }
 });
