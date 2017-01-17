@@ -4,7 +4,8 @@ angular.module('angularUikit', [])
             restrict: 'A',
             require: 'ngModel',
             scope: {
-                ukSource: '=',
+                ukSource: '=?',
+                ukSourcePath: '=?',
                 ukLabel: '=',
                 ukTemplate: '=',
                 ukOnSelect: '&'
@@ -13,19 +14,10 @@ angular.module('angularUikit', [])
 
                 var resultsTemplate = scope.ukTemplate ? scope.ukTemplate : '<ul class="uk-nav uk-nav-autocomplete uk-autocomplete-results">{{~items}}<li data-id="{{$item.id}}" data-value="{{$item.value}}"><a>{{$item.value}}</a></li>{{/items}}</ul>';
 
-                var source = [];
-                if (scope.ukSource)
-                    scope.ukSource.forEach(function (element, index) {
-                        var label;
-                        if (scope.ukLabel && element.hasOwnProperty(scope.ukLabel))
-                            label = element[scope.ukLabel];
-                        else if (typeof element === 'string' || element instanceof String)
-                            label = element;
-                        else label = 'Label missing!';
-
-                        source.push({ id: index, value: label });
-                    });
-                else source.push({ id: undefined, value: 'No source detected!' });
+                var source = scope.ukSource ? populateSource(scope.ukSource) : scope.ukSourcePath ? callback : [{
+                    id: undefined,
+                    value: 'No source detected!'
+                }];
 
                 var autocomplete = UIkit.autocomplete(elem.parent(), {
                     source: source,
@@ -50,6 +42,33 @@ angular.module('angularUikit', [])
                     }
                 };
 
+                function callback(release) {
+                    var search = {};
+                    search[scope.ukLabel ? scope.ukLabel : "search"] = ngModel.$viewValue;
+                    $http({
+                        method: "GET",
+                        url: scope.ukSourcePath,
+                        params: search
+                    }).then(
+                        function (resp) {
+                            scope.ukSource = resp.data;
+                            release(populateSource(resp.data));
+                        },
+                        function () {
+                            release([{id: undefined, value: 'Error retrieving data'}]);
+                        }
+                    );
+                }
+
+                function populateSource(objects) {
+                    var autocompleteRenderedObjects = [];
+                    objects.forEach(function (element, index) {
+                        var label = (typeof element === 'string' || element instanceof String) ? element : element[scope.ukLabel] ? element[scope.ukLabel] : 'Label missing!';
+                        autocompleteRenderedObjects.push({id: element.id ? element.id : index, value: label});
+                    });
+                    return autocompleteRenderedObjects;
+                }
+
                 scope.$watch('model.id + model.name', function () {
                     if (scope.model.id || scope.model.name) {
                         ngModel.$setViewValue({
@@ -65,6 +84,11 @@ angular.module('angularUikit', [])
 
                 ngModel.$parsers.unshift(function (value) {
                     if (value instanceof Object) {
+                        if (scope.ukSource && scope.ukSource[0].id) {
+                            return scope.ukSource.find(function (element) {
+                                return element.id == value.id;
+                            });
+                        }
                         return scope.ukSource[value.id];
                     }
                     return undefined;
@@ -80,7 +104,7 @@ angular.module('angularUikit', [])
                         });
                         if (scope.ukOnSelect) {
                             $timeout(function () {
-                                scope.ukOnSelect({ $selectedItem: scope.ukSource[ui.id] })
+                                scope.ukOnSelect({$selectedItem: scope.ukSource[ui.id]})
                             });
                         }
                     }
@@ -117,23 +141,24 @@ angular.module('angularUikit', [])
                 window.pag = pagination;
 
                 element.on('select.uk.pagination', function (e, pageIndex) {
-                    scope.onPageChange({ $page: pageIndex });
+                    scope.onPageChange({$page: pageIndex});
                 });
 
-                scope.$watch('listSize', function () {
+                scope.$watch('scope.listSize', function () {
                     pagination.options.items = scope.listSize;
                     pagination.pages = Math.ceil(scope.listSize / scope.pageSize);
                     pagination.render();
                 });
 
-                scope.$watch('pageSize', function () {
+                scope.$watch('scope.pageSize', function () {
                     pagination.options.itemsOnPage = scope.pageSize;
                     pagination.pages = Math.ceil(scope.listSize / scope.pageSize);
                     pagination.render();
                 });
             }
         };
-    }).directive('ukNgJsonTableForm', function ($compile, $timeout) {
+    })
+    .directive('ukNgJsonTableForm', function ($compile, $timeout) {
         return {
             restrict: "EA",
             scope: {
@@ -271,7 +296,8 @@ angular.module('angularUikit', [])
             element += '</table></fieldset></form>';
             return element;
         }
-    }).directive('ukNgCalendar', function () {
+    })
+    .directive('ukNgCalendar', function () {
         return {
             restrict: "EA",
             scope: {
@@ -458,5 +484,4 @@ angular.module('angularUikit', [])
                 }
             }
         }
-    })
-    ;
+    });
