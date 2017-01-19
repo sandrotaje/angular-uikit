@@ -1,5 +1,5 @@
 angular.module('angularUikit', [])
-    .directive('ukNgAutocomplete', function ($http, $timeout) {
+    .directive('ukNgAutocomplete', ['$http', '$timeout', function ($http, $timeout) {
         return {
             restrict: 'A',
             require: 'ngModel',
@@ -119,7 +119,7 @@ angular.module('angularUikit', [])
                 });
             }
         }
-    })
+    }])
     .directive('ukNgPagination', function () {
         return {
             restrict: 'AE',
@@ -158,7 +158,7 @@ angular.module('angularUikit', [])
             }
         };
     })
-    .directive('ukNgJsonTableForm', function ($compile, $timeout) {
+    .directive('ukNgJsonTableForm', ['$compile', '$timeout', function ($compile, $timeout) {
         return {
             restrict: "EA",
             scope: {
@@ -296,7 +296,7 @@ angular.module('angularUikit', [])
             element += '</table></fieldset></form>';
             return element;
         }
-    })
+    }])
     .directive('ukNgCalendar', function () {
         return {
             restrict: "EA",
