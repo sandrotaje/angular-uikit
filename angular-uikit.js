@@ -261,10 +261,25 @@ angular.module('angularUikit', [])
             element += '<div class="uk-accordion-content-{{s.property}}">';
             element += '<div data-uk-ng-json-table-form data-model="m[s.property]" data-structure="s.items" data-onlyread="onlyread" data-allHeaderInHead="allHeaderInHead"></div>';
             element += '</div></div>';
-            element += '<div ng-switch-when="autocomplete">{{m[s.property][s.autocomplete.label]?m[s.property][s.autocomplete.label]:m[s.property]}}</div>';
-            element += '<div ng-switch-when="select">{{m[s.property][s.select.label]}}</div>';
+            
+            
+            
+            // element += '<div ng-switch-when="autocomplete">{{m[s.property][s.autocomplete.label]?m[s.property][s.autocomplete.label]:m[s.property]}}</div>';
+            // element += '<div ng-switch-when="select">{{m[s.property][s.select.label]}}</div>';
+            // element += '<div ng-switch-when="sequence" ng-init="m.sequence = row.index">{{m.sequence}}</div>';
+            // element += '<div ng-switch-default>{{m[s.property]}}</div>';
+
+
             element += '<div ng-switch-when="sequence" ng-init="m.sequence = row.index">{{m.sequence}}</div>';
-            element += '<div ng-switch-default>{{m[s.property]}}</div>';
+            element += '<select name="{{s.property}}" ng-switch-when="select" data-ng-model="m[s.property][s.select.label]" class="uk-width-1-1" ng-options="opt[s.select.label] for opt in s.select.options track by opt[s.select.id]" required />';
+            element += '<div ng-switch-when="autocomplete" class="uk-autocomplete uk-form uk-width-1-1"><input name="{{s.property}}" type="text" placeholder="{{s.placeholder?s.placeholder:\'\'}}" class="uk-width-1-1" ng-model="m[s.property]" data-uk-source="s.autocomplete.source" data-uk-label="s.autocomplete.label" uk-ng-autocomplete required></div>';
+            element += '<input name="{{s.property}}" ng-switch-when="number" data-ng-model="m[s.property]" type="number" class="uk-width-1-1" data-ng-max="{{s.number.max}}" data-ng-min="{{s.number.min}}" required>';
+            element += '<input name="{{s.property}}" ng-switch-default data-ng-model="m[s.property]" type="{{s.type}}" placeholder="{{s.placeholder?s.placeholder:\'\'}}" class="uk-width-1-1" ng-required="s.required">';
+
+
+
+
+
 
             element += '</div>';
             element += '</td>';
