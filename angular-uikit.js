@@ -263,13 +263,14 @@ angular.module('angularUikit', [])
             element += '</div></div>';
             
             
-            
             // element += '<div ng-switch-when="autocomplete">{{m[s.property][s.autocomplete.label]?m[s.property][s.autocomplete.label]:m[s.property]}}</div>';
             // element += '<div ng-switch-when="select">{{m[s.property][s.select.label]}}</div>';
             // element += '<div ng-switch-when="sequence" ng-init="m.sequence = row.index">{{m.sequence}}</div>';
             // element += '<div ng-switch-default>{{m[s.property]}}</div>';
 
 
+            element += '<div ng-switch-when="autocomplete">{{m[s.property][s.autocomplete.label]?m[s.property][s.autocomplete.label]:m[s.property]}}</div>';
+            element += '<div ng-switch-when="select">{{m[s.property][s.select.label]?m[s.property][s.select.label]:m[s.property]}}</div>';
             element += '<div ng-switch-when="sequence" ng-init="m.sequence = row.index">{{m.sequence}}</div>';
             element += '<select name="{{s.property}}" ng-switch-when="select" data-ng-model="m[s.property][s.select.label]" class="uk-width-1-1" ng-options="opt[s.select.label] for opt in s.select.options track by opt[s.select.id]" required />';
             element += '<div ng-switch-when="autocomplete" class="uk-autocomplete uk-form uk-width-1-1"><input name="{{s.property}}" type="text" placeholder="{{s.placeholder?s.placeholder:\'\'}}" class="uk-width-1-1" ng-model="m[s.property]" data-uk-source="s.autocomplete.source" data-uk-label="s.autocomplete.label" uk-ng-autocomplete required></div>';
@@ -295,9 +296,14 @@ angular.module('angularUikit', [])
 
             element += '<span ng-switch-when="array"></span>';
             element += '<span ng-switch-when="sequence">#</span>';
-            element += '<select name="{{h.property}}" ng-switch-when="select" data-ng-model="newItem[h.property]" class="uk-width-1-1" ng-options="opt[h.select.label] for opt in h.select.options track by opt[h.select.id]" required />';
-            element += '<div ng-switch-when="autocomplete" class="uk-autocomplete uk-form uk-width-1-1"><input name="{{h.property}}" type="text" placeholder="{{h.placeholder?h.placeholder:\'\'}}" class="uk-width-1-1" ng-model="newItem[h.property]" data-uk-source="h.autocomplete.source" data-uk-label="h.autocomplete.label" uk-ng-autocomplete required></div>';
-            element += '<input name="{{h.property}}" ng-switch-when="number" data-ng-model="newItem[h.property]" type="number" class="uk-width-1-1" data-ng-max="{{h.number.max}}" data-ng-min="{{h.number.min}}" required>';
+
+            element += '<div ng-switch-when="select">';
+            element += '<select ng-if="h.select.label"  name="{{h.property}}" data-ng-model="newItem[h.property]" class="uk-width-1-1" ng-options="opt[h.select.label] for opt in h.select.options track by opt[h.select.id]" ng-required="h.required" />';
+            element += '<select ng-if="!h.select.label" name="{{h.property}}" data-ng-model="newItem[h.property]" class="uk-width-1-1" ng-options="opt for opt in h.select.options" ng-required="h.required" />';
+            element += '</div>';
+
+            element += '<div ng-switch-when="autocomplete" class="uk-autocomplete uk-form uk-width-1-1"><input name="{{h.property}}" type="text" placeholder="{{h.placeholder?h.placeholder:\'\'}}" class="uk-width-1-1" ng-model="newItem[h.property]" data-uk-source="h.autocomplete.source" data-uk-label="h.autocomplete.label" uk-ng-autocomplete ng-required="h.required"></div>';
+            element += '<input name="{{h.property}}" ng-switch-when="number" data-ng-model="newItem[h.property]" type="number" class="uk-width-1-1" data-ng-max="{{h.number.max}}" data-ng-min="{{h.number.min}}" ng-required="h.required">';
             element += '<input name="{{h.property}}" ng-switch-default data-ng-model="newItem[h.property]" type="{{h.type}}" placeholder="{{h.placeholder?h.placeholder:\'\'}}" class="uk-width-1-1" ng-required="h.required">';
 
             element += '</div>';
@@ -317,7 +323,7 @@ angular.module('angularUikit', [])
             restrict: "EA",
             scope: {
                 date: "=?",
-                getEventsByDate: "=?"
+                getEventsByDate: "&?"
             },
             template: "<div class=\"uk-grid uk-grid-collapse calendar\"><div class=\"uk-width-1-1 calendar-nav\"><a href=\"\" class=\"uk-icon-hover uk-icon-chevron-left\" ng-click=\"addMonth(-1)\"></a>        <div class=\"uk-form-select\" data-uk-form-select=\"{target:'a'}\">            <a>{{monthSelected}}</a>            <select ng-model=\"monthSelected\" ng-change=\"changeDate()\">                <option data-ng-repeat=\"m in months\" ng-value=\"m\">{{m}}</option>            </select>        </div>        <div class=\"uk-form-select\" data-uk-form-select=\"{target:'a'}\">            <a>{{yearSelected}}</a>            <select ng-model=\"yearSelected\" ng-change=\"changeDate()\">                <option data-ng-repeat=\"y in years | orderBy\" ng-value=\"y\">{{y}}</option>            </select>        </div>        <a href=\"\" class=\"uk-icon-hover uk-icon-chevron-right\" ng-click=\"addMonth(1)\"></a>    </div>    <div class=\"uk-width-1-1 calendar-header\">        <div class=\"uk-grid uk-grid-collapse calendar-header\">            <div class=\"uk-width calendar-header-day\" style=\"width: calc(100%/7)\"                 data-ng-repeat=\"d in ['Lun','Mar','Mer','Gio','Ven','Sab','Dom']\">                <div class=\"uk-panel uk-panel-box\">                    <h3 class=\"uk-panel-title\">{{d}}</h3>                </div>            </div>        </div>    </div>    <div class=\"uk-width-1-1 calendar-body\">        <div class=\"uk-grid uk-grid-collapse\" data-ng-repeat=\"w in month.weeks\" data-uk-grid-match=\"{target:'.uk-panel'}\">            <div class=\"uk-width calendar-day\" style=\"width: calc(100%/7)\" data-ng-repeat=\"d in w\" ng-click=\"toggleDay(d)\">                <div class=\"uk-panel uk-panel-box uk-panel-hover\" ng-class=\"{'active':d.isSelected}\">                    <h3 class=\"uk-panel-title\" ng-class=\"{'calendar-different-month-day':d.differentMonth}\"><i class=\"uk-icon-calendar\"></i> {{d.number}}</h3>                    <div class=\"uk-badge\" data-ng-repeat=\"e in d.events\">{{e.content}}</div>                </div>            </div>        </div>        <!--<div data-ng-repeat-end class=\"uk-block calendar-day-detail\" ng-if=\"hasDaySelected(w)\">-->            <!--Dettaglio-->        <!--</div>-->    </div></div>",
             link: function (scope, element, attrs) {
@@ -430,7 +436,7 @@ angular.module('angularUikit', [])
                     if (!scope.getEventsByDate) {
                         generateMonth(tmpDay, []);
                     } else {
-                        scope.getEventsByDate().then(function (events) {
+                        scope.getEventsByDate({$startDate: new Date(0), $endDate: new Date()}).then(function (events) {
                             var eventMap = {};
                             events.forEach(function (e) {
                                 var tmpDay = e.startDate;
