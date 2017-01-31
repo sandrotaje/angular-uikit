@@ -1,0 +1,72 @@
+<html data-ng-app="angularUIkitShowcase">
+
+<head>
+    <title>Angular UIkit showcase</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/uikit/2.27.2/css/uikit.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/uikit/2.27.2/css/components/autocomplete.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/uikit/2.27.2/css/components/form-select.min.css" />
+    <link rel="stylesheet" href="angular-uikit.min.css"/>
+</head>
+<body data-ng-controller="MainController as vm">
+
+
+<article class="uk-article">
+    <h1 class="uk-article-title">Autocomplete</h1>
+    <input data-uk-ng-autocomplete data-ng-model="vm.selected" data-uk-on-select="vm.autocompOnSelect($selectedItem)" data-uk-source="['test1', 'test2', 'test3']">
+</article>
+
+<article class="uk-article">
+    <h1 class="uk-article-title">Calendar</h1>
+    <uk-ng-calendar data-get-events-by-date="vm.getEventsByDate($startDate, $endDate)"></uk-ng-calendar>
+</article>
+
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.6/angular.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/2.27.2/js/uikit.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/2.27.2/js/components/autocomplete.min.js"></script>
+
+<script src="angular-uikit.min.js"></script>
+<script>
+
+    angular.module('angularUIkitShowcase', ['angularUikit'])
+    .controller('MainController', function($q, $timeout) {
+        var vm = this;
+
+        vm.autocompOnSelect = function(item) {
+            console.log(item);
+        };
+
+        vm.getEventsByDate = function(startDate, endDate) {
+            return $q(function(resolve){
+                $timeout(function() {
+                    resolve([{
+                        startDate: new Date(1486166400000),
+                        endDate: new Date(1486512000000),
+                        content: "wefwef della cinghiwefwefawef e tes nome molto lungo"
+                    },{
+                        startDate: new Date(1486252800000),
+                        endDate: new Date(1486425600000),
+                        content: "Sostituire filtro"
+                    },{
+                        startDate: new Date(1486252800000),
+                        endDate: new Date(1486512000000),
+                        content: "Sostituire blblawefwefwefw wefwefwe wefwef wef wef"
+                    }, {
+                        startDate: new Date(1486425600000),
+                        endDate: new Date(1486425600000),
+                        content: "Cambio della cinghia e tes nome molto lungo"
+                    }]);
+                }, 200);
+            });
+        };
+
+    })
+
+</script>
+
+
+</body>
+
+</html>
