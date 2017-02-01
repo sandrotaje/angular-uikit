@@ -6,7 +6,8 @@ export default function ukNgCalendar() {
             restrict: "EA",
             scope: {
                 date: "=?",
-                getEventsByDate: "&?"
+                getEventsByDate: "&?",
+                onEventSelected: "&?"
             },
             templateUrl: templateUrl,
             link: function (scope, element, attrs) {
@@ -17,17 +18,6 @@ export default function ukNgCalendar() {
                         if (el.isSelected) return true;
                     }
                     return false;
-                };
-
-                scope.toggleDay = function (day) {
-                    day.isSelected = !day.isSelected;
-                    scope.month.weeks.forEach(function (w) {
-                        w.forEach(function (d) {
-                            if (day.date !== d.date) {
-                                d.isSelected = false;
-                            }
-                        });
-                    });
                 };
 
                 scope.changeDate = function () {
@@ -56,6 +46,24 @@ export default function ukNgCalendar() {
                         return dayRem;
                     }
                     return num;
+                }
+
+                scope.selectEvent = function(e) {
+                    scope.onEventSelected({$event: e});
+                }
+
+                scope.getStyle = function(style) {
+                    var ngStyle = {};
+                    if (style) {
+                        if (style.color) {
+                            ngStyle['color'] = style.color;
+                        }
+                        if (style.background) {
+                            ngStyle['background'] = style.background;
+                        }
+                        return ngStyle;
+                    }
+                    return {};
                 }
 
 
@@ -131,6 +139,7 @@ export default function ukNgCalendar() {
                             var eventMap = {};
                             var events = [...events];
                             events.forEach(function (e) {
+                                e.original = Object.assign({}, e);
                                 var tmpDay = e.startDate;
                                 e.numDays = (e.endDate - e.startDate)/(1000*60*60*24);
                                 e.firstDay = true;

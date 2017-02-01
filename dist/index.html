@@ -6,6 +6,13 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/uikit/2.27.2/css/components/autocomplete.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/uikit/2.27.2/css/components/form-select.min.css" />
     <link rel="stylesheet" href="angular-uikit.min.css"/>
+
+    <style>
+        .alert-class {
+            background: yellow !important;
+            color: red !important;
+        }
+    </style>
 </head>
 <body data-ng-controller="MainController as vm">
 
@@ -17,7 +24,7 @@
 
 <article class="uk-article">
     <h1 class="uk-article-title">Calendar</h1>
-    <uk-ng-calendar data-get-events-by-date="vm.getEventsByDate($startDate, $endDate)"></uk-ng-calendar>
+    <uk-ng-calendar data-get-events-by-date="vm.getEventsByDate($startDate, $endDate)" data-on-event-selected="vm.onEventSelected($event)"></uk-ng-calendar>
 </article>
 
 
@@ -38,22 +45,35 @@
             console.log(item);
         };
 
+        vm.onEventSelected = function(e) {
+            console.log(e);
+        }
+
         vm.getEventsByDate = function(startDate, endDate) {
             return $q(function(resolve){
                 $timeout(function() {
                     resolve([{
+                        id: 1,
                         startDate: new Date(1486166400000),
                         endDate: new Date(1486512000000),
-                        content: "wefwef della cinghiwefwefawef e tes nome molto lungo"
+                        content: "wefwef della cinghiwefwefawef e tes nome molto lungo",
+                        style: {
+                            color: "red",
+                            background: "green"
+                        }
                     },{
+                        id: 2,
                         startDate: new Date(1486252800000),
                         endDate: new Date(1486425600000),
-                        content: "Sostituire filtro"
+                        content: "Sostituire filtro",
+                        className: "alert-class"
                     },{
+                        id: 3,
                         startDate: new Date(1486252800000),
                         endDate: new Date(1486512000000),
                         content: "Sostituire blblawefwefwefw wefwefwe wefwef wef wef"
                     }, {
+                        id: 4,
                         startDate: new Date(1486425600000),
                         endDate: new Date(1486425600000),
                         content: "Cambio della cinghia e tes nome molto lungo"

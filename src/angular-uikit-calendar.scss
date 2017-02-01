@@ -36,10 +36,6 @@ $color-primary: blue !default;
           font-size: 24px;
         }
       }
-      .uk-panel.active {
-        background: #d6d6d6;
-        border-bottom: 0;
-      }
       .calendar-event {
           &.multiday{
             width: 100%;
@@ -52,6 +48,7 @@ $color-primary: blue !default;
           color: white;
           padding: 3px 0 3px 5px;
           margin-bottom: 3px;
+          cursor: pointer;
       }
       span{
           position: relative;

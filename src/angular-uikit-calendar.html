@@ -26,10 +26,10 @@
    </div>
    <div class="uk-width-1-1 calendar-body">
       <div class="uk-grid uk-grid-collapse" data-ng-repeat="w in month.weeks" data-uk-grid-match="{target:'.uk-panel'}">
-         <div class="uk-width calendar-day" style="width: calc(100%/7)" data-ng-repeat="d in w" data-ng-init="dayIndex = $index" ng-click="toggleDay(d)">
-            <div class="uk-panel uk-panel-box uk-panel-hover" ng-class="{'active':d.isSelected}">
+         <div class="uk-width calendar-day" style="width: calc(100%/7)" data-ng-repeat="d in w" data-ng-init="dayIndex = $index">
+            <div class="uk-panel uk-panel-box uk-panel-hover">
                <h3 class="uk-panel-title" ng-class="{'calendar-different-month-day':d.differentMonth}"><i class="uk-icon-calendar"></i> {{d.number}}</h3>
-               <div class="calendar-event" data-ng-class="{'multiday': e.numDays>1 && dayIndex!=6}" data-ng-repeat="e in d.events | orderBy: ['-numDays','content']">
+               <div data-ng-style="getStyle(e.style)" data-ng-click="selectEvent(e.original)" class="calendar-event {{e.className}}" data-ng-class="{'multiday': e.numDays>1 && dayIndex!=6}" data-ng-repeat="e in d.events | orderBy: ['-numDays','content']">
                    <span style="max-width: calc(100%*{{getDaysRemaining(e.numDays, dayIndex)}} - 10px)" data-ng-if="e.firstDay || dayIndex==0">{{e.content}}</span>
                 </div>
             </div>
