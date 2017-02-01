@@ -49,7 +49,7 @@ export default function ukNgCalendar() {
                 }
 
                 scope.selectEvent = function(e) {
-                    scope.onEventSelected({$event: e});
+                    scope.onEventSelected && scope.onEventSelected({$event: e});
                 }
 
                 scope.getStyle = function(style) {
