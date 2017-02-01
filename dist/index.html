@@ -5,7 +5,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/uikit/2.27.2/css/uikit.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/uikit/2.27.2/css/components/autocomplete.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/uikit/2.27.2/css/components/form-select.min.css" />
-    <link rel="stylesheet" href="angular-uikit.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/uikit/2.27.2/css/components/sortable.min.css" />
+    <link rel="stylesheet" href="angular-uikit.min.css" />
 
     <style>
         .alert-class {
@@ -14,75 +15,92 @@
         }
     </style>
 </head>
+
 <body data-ng-controller="MainController as vm">
 
 
-<article class="uk-article">
-    <h1 class="uk-article-title">Autocomplete</h1>
-    <input data-uk-ng-autocomplete data-ng-model="vm.selected" data-uk-on-select="vm.autocompOnSelect($selectedItem)" data-uk-source="['test1', 'test2', 'test3']">
-</article>
+    <article class="uk-article">
+        <h1 class="uk-article-title">Autocomplete</h1>
+        <input data-uk-ng-autocomplete data-ng-model="vm.selected" data-uk-on-select="vm.autocompOnSelect($selectedItem)" data-uk-source="['test1', 'test2', 'test3']">
+    </article>
 
-<article class="uk-article">
-    <h1 class="uk-article-title">Calendar</h1>
-    <uk-ng-calendar data-get-events-by-date="vm.getEventsByDate($startDate, $endDate)" data-on-event-selected="vm.onEventSelected($event)"></uk-ng-calendar>
-</article>
+    <article class="uk-article">
+        <h1 class="uk-article-title">Calendar</h1>
+        <uk-ng-calendar data-get-events-by-date="vm.getEventsByDate($startDate, $endDate)" data-on-event-selected="vm.onEventSelected($event)"></uk-ng-calendar>
+    </article>
 
+    <article class="uk-article">
+        <h1 class="uk-article-title">Sortable</h1>
+        <div class="uk-grid uk-grid-match uk-sortable" data-uk-ng-sortable="{handleClass: 'uk-sortable-handle'}">
+            <div data-id="{{$index}}" data-uk-ng-sortable-item="p" data-ng-repeat="p in vm.sortList | orderBy: 'order'" data-uk-grid-margin>
+                <i data-ng-if="!conf.readonly" class="uk-icon-bars uk-text-success uk-sortable-handle"></i>Ciao
+            </div>
+        </div>
+    </article>
 
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.6/angular.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/2.27.2/js/uikit.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/2.27.2/js/components/autocomplete.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/2.27.2/js/components/sortable.min.js"></script>
 
-<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.6/angular.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/2.27.2/js/uikit.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/2.27.2/js/components/autocomplete.min.js"></script>
-
-<script src="angular-uikit.min.js"></script>
-<script>
+    <script src="angular-uikit.min.js"></script>
+    <script>
 
     angular.module('angularUIkitShowcase', ['angularUikit'])
-    .controller('MainController', function($q, $timeout) {
-        var vm = this;
+        .controller('MainController', function ($q, $timeout) {
+            var vm = this;
 
-        vm.autocompOnSelect = function(item) {
-            console.log(item);
-        };
+            vm.sortList = [{
+                order: 1,
+                content: "Test1"
+            },{
+                order: 2,
+                content: "Test2"
+            }]
 
-        vm.onEventSelected = function(e) {
-            console.log(e);
-        }
+            vm.autocompOnSelect = function (item) {
+                console.log(item);
+            };
 
-        vm.getEventsByDate = function(startDate, endDate) {
-            return $q(function(resolve){
-                $timeout(function() {
-                    resolve([{
-                        id: 1,
-                        startDate: new Date(1486166400000),
-                        endDate: new Date(1486512000000),
-                        content: "wefwef della cinghiwefwefawef e tes nome molto lungo",
-                        style: {
-                            color: "red",
-                            background: "green"
-                        }
-                    },{
-                        id: 2,
-                        startDate: new Date(1486252800000),
-                        endDate: new Date(1486425600000),
-                        content: "Sostituire filtro",
-                        className: "alert-class"
-                    },{
-                        id: 3,
-                        startDate: new Date(1486252800000),
-                        endDate: new Date(1486512000000),
-                        content: "Sostituire blblawefwefwefw wefwefwe wefwef wef wef"
-                    }, {
-                        id: 4,
-                        startDate: new Date(1486425600000),
-                        endDate: new Date(1486425600000),
-                        content: "Cambio della cinghia e tes nome molto lungo"
-                    }]);
-                }, 200);
-            });
-        };
+            vm.onEventSelected = function (e) {
+                console.log(e);
+            }
 
-    })
+            vm.getEventsByDate = function (startDate, endDate) {
+                return $q(function (resolve) {
+                    $timeout(function () {
+                        resolve([{
+                            id: 1,
+                            startDate: new Date(1486166400000),
+                            endDate: new Date(1486512000000),
+                            content: "wefwef della cinghiwefwefawef e tes nome molto lungo",
+                            style: {
+                                color: "red",
+                                background: "green"
+                            }
+                        }, {
+                            id: 2,
+                            startDate: new Date(1486252800000),
+                            endDate: new Date(1486425600000),
+                            content: "Sostituire filtro",
+                            className: "alert-class"
+                        }, {
+                            id: 3,
+                            startDate: new Date(1486252800000),
+                            endDate: new Date(1486512000000),
+                            content: "Sostituire blblawefwefwefw wefwefwe wefwef wef wef"
+                        }, {
+                            id: 4,
+                            startDate: new Date(1486425600000),
+                            endDate: new Date(1486425600000),
+                            content: "Cambio della cinghia e tes nome molto lungo"
+                        }]);
+                    }, 200);
+                });
+            };
+
+        })
 
 </script>
 

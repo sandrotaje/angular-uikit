@@ -4,7 +4,7 @@ export default function ukNgSortable() {
         scope: {
             options: '=ukNgSortable'
         },
-        controller: function ($scope, $element) {
+        controller: ["$scope", "$element", function ($scope, $element) {
 
             var ctrl = this;
 
@@ -27,6 +27,6 @@ export default function ukNgSortable() {
                     item: i
                 });
             }
-        }
+        }]
     }
 }
