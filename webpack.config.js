@@ -35,13 +35,14 @@ var config = {
             }]
     },
     plugins: [
-        new ExtractTextPlugin("angular-uikit.min.css"),
-        new webpack.optimize.UglifyJsPlugin({
-            compress: {
-                warnings: false
-            },
-            comments: false
-        })
+        new ExtractTextPlugin("angular-uikit.min.css")
+        // ,
+        // new webpack.optimize.UglifyJsPlugin({
+        //     compress: {
+        //         warnings: false
+        //     },
+        //     comments: false
+        // })
     ]
 }
 

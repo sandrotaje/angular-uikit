@@ -68,6 +68,7 @@
             }
 
             vm.getEventsByDate = function (startDate, endDate) {
+                console.log(startDate, endDate);
                 return $q(function (resolve) {
                     $timeout(function () {
                         resolve([{

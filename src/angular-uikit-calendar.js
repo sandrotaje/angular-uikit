@@ -11,6 +11,9 @@ export default function ukNgCalendar() {
             },
             templateUrl: templateUrl,
             link: function (scope, element, attrs) {
+
+                var ONE_DAY = 24 * 60 * 60 * 1000;
+
                 scope.hasDaySelected = function (w) {
                     if (!w) return false;
                     for (var i = 0; i < w.length; i++) {
@@ -97,10 +100,10 @@ export default function ukNgCalendar() {
                     var startDate = new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), 1));
 
                     while (startDate.getUTCDay() != 1) {
-                        startDate = new Date(startDate.getTime() - 24 * 60 * 60 * 1000);
+                        startDate = new Date(startDate.getTime() - ONE_DAY);
                     }
 
-                    var tmpDay = startDate;
+                    var tmpDay = new Date(startDate.getTime());
 
                     var month = {
                         weeks: []
@@ -126,7 +129,7 @@ export default function ukNgCalendar() {
                                 month.weeks[week] = [];
                             }
                             month.weeks[week].push(jsonDay);
-                            tmpDay = new Date(tmpDay.getTime() + 24 * 60 * 60 * 1000);
+                            tmpDay = new Date(tmpDay.getTime() + ONE_DAY);
                         }
 
                         scope.month = month;
@@ -135,7 +138,7 @@ export default function ukNgCalendar() {
                     if (!scope.getEventsByDate) {
                         generateMonth(tmpDay, []);
                     } else {
-                        scope.getEventsByDate({$startDate: new Date(0), $endDate: new Date()}).then(function (events) {
+                        scope.getEventsByDate({$startDate: startDate, $endDate: new Date(startDate.getTime() + 42 * ONE_DAY)}).then(function (events) {
                             var eventMap = {};
                             var events = [...events];
                             events.forEach(function (e) {
