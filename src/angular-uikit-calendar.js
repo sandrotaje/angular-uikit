@@ -155,6 +155,9 @@ export default function ukNgCalendar() {
                             var events = [...events];
                             events.forEach(function (e) {
                                 e.original = Object.assign({}, e);
+                                e.startDate = angular.isDate(e.startDate) ? e.startDate : new Date(e.startDate);
+                                e.endDate = angular.isDate(e.endDate) ? e.endDate : new Date(e.endDate);
+
                                 var tmpDay = e.startDate;
                                 e.numDays = scope.getNumDays(e.startDate, e.endDate);
                                 e.firstDay = true;
