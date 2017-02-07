@@ -69,6 +69,18 @@ export default function ukNgCalendar() {
                     return {};
                 }
 
+                scope.getNumDays = function(startDate, endDate) {
+                    var startDate = new Date(startDate.getTime());
+                    var endDate = new Date(endDate.getTime());
+                    var tempDay = 1;
+                    if (endDate.getUTCMonth() != startDate.getUTCMonth()) {
+                        tempDay += endDate.getUTCDate();
+                        endDate.setUTCDate(0);
+                        
+                    }
+                    return endDate.getUTCDate() - startDate.getUTCDate() + tempDay;
+                }
+
 
                 scope.$watch("date", function () {
 
@@ -144,7 +156,7 @@ export default function ukNgCalendar() {
                             events.forEach(function (e) {
                                 e.original = Object.assign({}, e);
                                 var tmpDay = e.startDate;
-                                e.numDays = (e.endDate - e.startDate)/(1000*60*60*24);
+                                e.numDays = scope.getNumDays(e.startDate, e.endDate);
                                 e.firstDay = true;
                                 while (tmpDay <= e.endDate) {
                                     if (!eventMap[tmpDay.getUTCFullYear()+""+tmpDay.getUTCMonth()+""+tmpDay.getUTCDate()]) {
