@@ -5,7 +5,7 @@
     "Manuel Larsen <manuel.larsen@gmail.com>"
   ],
   "description": "Angular directives for ui-kit components",
-  "main": "./angular-uikit.js",
+  "main": ["./dist/angular-uikit.min.js", "./dist/angular-uikit.min.css"],
   "keywords": [
     "angular",
     "uikit"
