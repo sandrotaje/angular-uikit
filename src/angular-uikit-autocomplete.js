@@ -26,6 +26,15 @@ export default function ukNgAutocomplete($http, $timeout) {
                 template: resultsTemplate
             });
 
+            scope.$watch('ukSource', function () {
+                autocomplete.options.source = source = scope.ukSource ? populateSource(scope.ukSource) : scope.ukSourcePath ? callback : [{
+                    id: undefined,
+                    value: 'No source detected!'
+                }];
+                ngModel.$render();
+            });
+
+
             scope.model = {};
 
             ngModel.$render = function () {

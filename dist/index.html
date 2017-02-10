@@ -21,7 +21,8 @@
 
     <article class="uk-article">
         <h1 class="uk-article-title">Autocomplete</h1>
-        <input data-uk-ng-autocomplete data-ng-model="vm.selected" data-uk-on-select="vm.autocompOnSelect($selectedItem)" data-uk-source="['test1', 'test2', 'test3']">
+        <input data-uk-ng-autocomplete data-ng-model="vm.selected" data-uk-on-select="vm.autocompOnSelect($selectedItem)" data-uk-source="vm.source">
+        <button class="uk-button" data-ng-click="vm.source = ['test1', 'change2', 'change3']">Change source</button>
     </article>
 
     <article class="uk-article">
@@ -52,6 +53,7 @@
             var vm = this;
 
             vm.selected = 'test1';
+            vm.source = ['test1', 'test2', 'test3'];
 
             vm.sortList = [{
                 order: 1,
