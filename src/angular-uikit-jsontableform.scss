@@ -1,0 +1,31 @@
+ $color-primary: blue !default;
+ 
+ .uk-table.uk-ng-table-form {
+    tr {
+        border: solid 1px #e2e2e2;
+    }
+    thead th {
+        font-size: 95%;
+        color: red;
+        vertical-align: bottom;
+        text-align: left;
+        color: white !important;
+        background-color: $color-primary;
+    }
+    th, td {
+        padding: 8px 8px;
+    }
+
+    .uk-button-primary:active, .uk-button-primary.uk-active {
+        background-color: darken($color-primary, 10%);
+        color: #fff;
+    }
+
+    td.trash-button {
+        position: relative;
+        padding: 0 0 1px 0;
+        button.uk-button{
+            position: absolute;
+        }
+    }
+}

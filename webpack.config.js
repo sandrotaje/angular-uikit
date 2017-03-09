@@ -13,7 +13,7 @@ var config = {
     devServer: {
         inline: true,
         contentBase: "./dist",
-        port: 8100
+        port: 8200
     },
     module: {
         rules: [

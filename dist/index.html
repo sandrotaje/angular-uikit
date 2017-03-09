@@ -39,75 +39,150 @@
         </div>
     </article>
 
+    <article class="uk-article">
+        <h1 class="uk-article-title">JSON Table Form</h1>
+        <uk-ng-json-table-form model="vm.jsonTableModel" structure="vm.structure"></uk-ng-json-table-form>
+        {{vm.jsonTableModel | json}}
+    </article>
+
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.6/angular.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/2.27.2/js/uikit.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/2.27.2/js/components/autocomplete.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/2.27.2/js/components/sortable.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/2.27.2/js/components/accordion.min.js"></script>
 
     <script src="angular-uikit.min.js"></script>
     <script>
+        angular.module('angularUIkitShowcase', ['angularUikit'])
+            .controller('MainController', function ($q, $timeout) {
+                var vm = this;
 
-    angular.module('angularUIkitShowcase', ['angularUikit'])
-        .controller('MainController', function ($q, $timeout) {
-            var vm = this;
+                vm.selected = 'test1';
+                vm.source = ['test1', 'test2', 'test3'];
 
-            vm.selected = 'test1';
-            vm.source = ['test1', 'test2', 'test3'];
+                vm.sortList = [{
+                    order: 1,
+                    content: "Test1"
+                }, {
+                    order: 2,
+                    content: "Test2"
+                }];
 
-            vm.sortList = [{
-                order: 1,
-                content: "Test1"
-            },{
-                order: 2,
-                content: "Test2"
-            }]
-
-            vm.autocompOnSelect = function (item) {
-                console.log(item);
-            };
-
-            vm.onEventSelected = function (e) {
-                console.log(e);
-            }
-
-            vm.getEventsByDate = function (startDate, endDate) {
-                console.log(startDate, endDate);
-                return $q(function (resolve) {
-                    $timeout(function () {
-                        resolve([{
-                            id: 1,
-                            startDate: 1486166400000,
-                            endDate: 1486512000000,
-                            content: "wefwef della cinghiwefwefawef e tes nome molto lungo",
-                            style: {
-                                color: "red",
-                                background: "green"
+                vm.structure = [
+                    {
+                        "label": "Name",
+                        "property": "name",
+                        "type": "text",
+                        "required": true
+                    },
+                    {
+                        "label": "Priority",
+                        "property": "priority",
+                        "type": "number",
+                        "min": 0,
+                        "required": true
+                    },
+                    {
+                        "label": "Maintenance Cases",
+                        "property": "maintenanceCases",
+                        "type": "array",
+                        "items": [
+                            {
+                                "label": "Offset",
+                                "property": "offset",
+                                "type": "number",
+                                "min": 0,
+                                "required": true
+                            },
+                            {
+                                "label": "Recurrence",
+                                "property": "recurrence",
+                                "type": "number",
+                                "min": 0,
+                                "required": true
+                            },
+                            {
+                                "label": "Maintenance Timings",
+                                "property": "maintenanceTimings",
+                                "type": "array",
+                                "items": [
+                                    {
+                                        "label": "Value",
+                                        "property": "value",
+                                        "type": "number",
+                                        "min": 0,
+                                        "required": true
+                                    },
+                                    {
+                                        "label": "Timing Quantity",
+                                        "property": "timingQuantity",
+                                        "type": "text",
+                                        "required": true
+                                    },
+                                    {
+                                        "label": "Label",
+                                        "property": "timingLabel",
+                                        "type": "text"
+                                    },
+                                    {
+                                        "label": "Path",
+                                        "property": "timingPath",
+                                        "type": "text",
+                                        "placeholder": "Insert path to external resource"
+                                    }
+                                ]
                             }
-                        }, {
-                            id: 2,
-                            startDate: new Date(1486252800000),
-                            endDate: new Date(1486425600000),
-                            content: "Sostituire filtro",
-                            className: "alert-class"
-                        }, {
-                            id: 3,
-                            startDate: new Date(1486252800000),
-                            endDate: new Date(1486512000000),
-                            content: "Sostituire blblawefwefwefw wefwefwe wefwef wef wef"
-                        }, {
-                            id: 4,
-                            startDate: new Date(1486425600000),
-                            endDate: new Date(1486425600000),
-                            content: "Cambio della cinghia e tes nome molto lungo"
-                        }]);
-                    }, 200);
-                });
-            };
 
-        })
+                        ]
+                    }
+                ];
 
-</script>
+                vm.autocompOnSelect = function (item) {
+                    console.log(item);
+                };
+
+                vm.onEventSelected = function (e) {
+                    console.log(e);
+                }
+
+                vm.getEventsByDate = function (startDate, endDate) {
+                    console.log(startDate, endDate);
+                    return $q(function (resolve) {
+                        $timeout(function () {
+                            resolve([{
+                                id: 1,
+                                startDate: 1486166400000,
+                                endDate: 1486512000000,
+                                content: "wefwef della cinghiwefwefawef e tes nome molto lungo",
+                                style: {
+                                    color: "red",
+                                    background: "green"
+                                }
+                            }, {
+                                id: 2,
+                                startDate: new Date(1486252800000),
+                                endDate: new Date(1486425600000),
+                                content: "Sostituire filtro",
+                                className: "alert-class"
+                            }, {
+                                id: 3,
+                                startDate: new Date(1486252800000),
+                                endDate: new Date(1486512000000),
+                                content: "Sostituire blblawefwefwefw wefwefwe wefwef wef wef"
+                            }, {
+                                id: 4,
+                                startDate: new Date(1486425600000),
+                                endDate: new Date(1486425600000),
+                                content: "Cambio della cinghia e tes nome molto lungo"
+                            }]);
+                        }, 200);
+                    });
+                };
+
+            })
+
+    </script>
 
 
 </body>
