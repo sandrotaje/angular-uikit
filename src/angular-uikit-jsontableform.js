@@ -151,7 +151,7 @@ export default function ukNgJsonTableForm($compile, $timeout) {
             element += '</div>';
             element += '</td>';
 
-            element += '<td class="jstableform-button uk-width-1-1 uk-height-1-1"><button  ng-class="{\'uk-text-success\': newItemForm.$valid}" type="submit" class="uk-button" data-ng-disabled="newItemForm.$invalid"><i class="uk-icon-plus uk-icon-small"></i></button></td>';
+            element += '<td class="jstableform-button"><button  ng-class="{\'uk-text-success\': newItemForm.$valid}" type="submit" class="uk-button uk-width-1-1 uk-height-1-1" data-ng-disabled="newItemForm.$invalid"><i class="uk-icon-plus uk-icon-small"></i></button></td>';
             element += '</tr>';
             //-----------------------
 
