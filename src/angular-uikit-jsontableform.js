@@ -121,12 +121,12 @@ export default function ukNgJsonTableForm($compile, $timeout) {
             element += '</div>';
 
             //element += '<div ng-switch-when="autocomplete" class="uk-autocomplete uk-form uk-width-1-1"><input name="{{s.property}}" type="text" placeholder="{{s.placeholder?s.placeholder:\'\'}}" class="uk-width-1-1" ng-model="m[s.property]" data-uk-source-path="s.autocomplete.sourcePath" data-uk-source="s.autocomplete.source" data-uk-label="s.autocomplete.label" uk-ng-autocomplete required></div>';
-            element += '<input name="{{s.property}}" ng-switch-when="number" data-ng-model="m[s.property]" type="number" class="uk-width-1-1" data-ng-max="{{s.number.max}}" data-ng-min="{{s.number.min}}" required>';
-            element += '<input name="{{s.property}}" ng-switch-default data-ng-model="m[s.property]" type="{{s.type}}" placeholder="{{s.placeholder?s.placeholder:\'\'}}" class="uk-width-1-1" ng-required="s.required">';
+            element += '<input name="{{s.property}}" ng-switch-when="number" data-ng-model="m[s.property]" type="number" class="uk-form-blank uk-width-1-1" data-ng-max="{{s.number.max}}" data-ng-min="{{s.number.min}}" required>';
+            element += '<input name="{{s.property}}" ng-switch-default data-ng-model="m[s.property]" type="{{s.type}}" placeholder="{{s.placeholder?s.placeholder:\'\'}}" class="uk-form-blank uk-width-1-1" ng-required="s.required">';
 
             element += '</div>';
             element += '</td>';
-            element += '<td ng-if="!onlyread" class="trash-button"><button type="button" class="uk-button uk-text-danger uk-width-1-1 uk-height-1-1" ng-click="removeItem($index)"><i class="uk-icon-trash uk-icon-small"></i></button></td>';
+            element += '<td ng-if="!onlyread" class="jstableform-button"><button type="button" class="uk-button uk-text-danger uk-width-1-1 uk-height-1-1" ng-click="removeItem($index)"><i class="uk-icon-trash uk-icon-small"></i></button></td>';
             element += '</tr>';
 
             //creating input
@@ -151,7 +151,7 @@ export default function ukNgJsonTableForm($compile, $timeout) {
             element += '</div>';
             element += '</td>';
 
-            element += '<td><button  ng-class="{\'uk-text-success\': newItemForm.$valid}" type="submit" class="uk-button" style="width:80px" data-ng-disabled="newItemForm.$invalid"><i class="uk-icon-plus uk-icon-small"></i></button></td>';
+            element += '<td class="jstableform-button uk-width-1-1 uk-height-1-1"><button  ng-class="{\'uk-text-success\': newItemForm.$valid}" type="submit" class="uk-button" data-ng-disabled="newItemForm.$invalid"><i class="uk-icon-plus uk-icon-small"></i></button></td>';
             element += '</tr>';
             //-----------------------
 
