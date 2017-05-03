@@ -14,7 +14,7 @@ export default function ukNgAutocomplete($http, $timeout) {
 
             var resultsTemplate = scope.ukTemplate ? scope.ukTemplate : '<ul class="uk-nav uk-nav-autocomplete uk-autocomplete-results">{{~items}}<li data-id="{{$item.id}}" data-value="{{$item.value}}"><a>{{$item.value}}</a></li>{{/items}}</ul>';
 
-            var source = scope.ukSource ? populateSource(scope.ukSource) : scope.ukSourcePath ? callback : [{
+            var source = scope.ukSourcePath ? callback : scope.ukSource ? populateSource(scope.ukSource) : [{
                 id: undefined,
                 value: 'No source detected!'
             }];
@@ -27,7 +27,7 @@ export default function ukNgAutocomplete($http, $timeout) {
             });
 
             scope.$watch('ukSource', function () {
-                autocomplete.options.source = source = scope.ukSource ? populateSource(scope.ukSource) : scope.ukSourcePath ? callback : [{
+                autocomplete.options.source = source = scope.ukSourcePath ? callback : scope.ukSource ? populateSource(scope.ukSource) : [{
                     id: undefined,
                     value: 'No source detected!'
                 }];
@@ -41,16 +41,17 @@ export default function ukNgAutocomplete($http, $timeout) {
                 var viewValue = ngModel.$viewValue;
                 if (typeof viewValue === "string" || viewValue instanceof String) {
                     viewValue = source.find(s => s.value === viewValue);
-                }
-                if (viewValue) {
-                    elem.val(viewValue.value);
-
-                    scope.model.id = viewValue.id;
-                    scope.model.value = viewValue.value;
-
                 } else {
-                    scope.model = {};
-                    elem.val('')
+                    if (viewValue) {
+                        elem.val(viewValue.value);
+
+                        scope.model.id = viewValue.id;
+                        scope.model.value = viewValue.value;
+
+                    } else {
+                        scope.model = {};
+                        elem.val('')
+                    }
                 }
             };
 
@@ -67,16 +68,16 @@ export default function ukNgAutocomplete($http, $timeout) {
                         release(populateSource(resp.data));
                     },
                     function () {
-                        release([{ id: undefined, value: 'Error retrieving data' }]);
+                        release([{id: undefined, value: 'Error retrieving data'}]);
                     }
-                    );
+                );
             }
 
             function populateSource(objects) {
                 var autocompleteRenderedObjects = [];
                 objects.forEach(function (element, index) {
                     var label = (typeof element === 'string' || element instanceof String) ? element : element[scope.ukLabel] ? element[scope.ukLabel] : 'Label missing!';
-                    autocompleteRenderedObjects.push({ id: element.id ? element.id : index, value: label });
+                    autocompleteRenderedObjects.push({id: element.id ? element.id : index, value: label});
                 });
                 return autocompleteRenderedObjects;
             }
@@ -116,7 +117,7 @@ export default function ukNgAutocomplete($http, $timeout) {
                     });
                     if (scope.ukOnSelect) {
                         $timeout(function () {
-                            scope.ukOnSelect({ $selectedItem: scope.ukSource[ui.id] })
+                            scope.ukOnSelect({$selectedItem: scope.ukSource[ui.id]})
                         });
                     }
                 }

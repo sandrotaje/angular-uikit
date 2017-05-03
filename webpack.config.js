@@ -31,12 +31,11 @@ var config = {
                 use: ExtractTextPlugin.extract({ 
                     fallbackLoader: "style-loader", 
                     loader: "css-loader?minimize=true!sass-loader"
-                }),
+                })
             }]
     },
     plugins: [
-        new ExtractTextPlugin("angular-uikit.min.css")
-        ,
+        new ExtractTextPlugin("angular-uikit.min.css"),
         new webpack.optimize.UglifyJsPlugin({
             compress: {
                 warnings: false
@@ -44,6 +43,6 @@ var config = {
             comments: false
         })
     ]
-}
+};
 
 module.exports = config;
