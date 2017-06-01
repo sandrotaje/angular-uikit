@@ -69,6 +69,17 @@
                     content: "Test2"
                 }];
 
+                vm.jsonTableModel = [{
+                    name: "ciao",
+                    keyValueObject: 1,
+                    valueArray: "Units",
+                    arrayOfObject: {
+                        id: 1,
+                        label: "Units"
+                    },
+                    priority: 1
+                }];
+
                 vm.structure = [
                     {
                         "label": "Name",
@@ -77,64 +88,49 @@
                         "required": true
                     },
                     {
+                        "label": "keyValueObject",
+                        "property": "keyValueObject",
+                        "type": "select",
+                        "select": {
+                            "options": {
+                                "Units": 1,
+                                "Millions": 10000000
+                            }
+                        }
+                    },
+                    {
+                        "label": "valueArray",
+                        "property": "valueArray",
+                        "type": "select",
+                        "select": {
+                            "options": ["Units", "Millions"]
+                        }
+                    },
+                    {
+                        "label": "arrayOfObject",
+                        "property": "arrayOfObject",
+                        "type": "select",
+                        "select": {
+                            "id": "id",
+                            "label": "label",
+                            "options": [
+                                {
+                                    id: 1,
+                                    label: "Units"
+                                },
+                                {
+                                    id: 2,
+                                    label: "Millions"
+                                }
+                            ]
+                        }
+                    },
+                    {
                         "label": "Priority",
                         "property": "priority",
                         "type": "number",
                         "min": 0,
                         "required": true
-                    },
-                    {
-                        "label": "Maintenance Cases",
-                        "property": "maintenanceCases",
-                        "type": "array",
-                        "items": [
-                            {
-                                "label": "Offset",
-                                "property": "offset",
-                                "type": "number",
-                                "min": 0,
-                                "required": true
-                            },
-                            {
-                                "label": "Recurrence",
-                                "property": "recurrence",
-                                "type": "number",
-                                "min": 0,
-                                "required": true
-                            },
-                            {
-                                "label": "Maintenance Timings",
-                                "property": "maintenanceTimings",
-                                "type": "array",
-                                "items": [
-                                    {
-                                        "label": "Value",
-                                        "property": "value",
-                                        "type": "number",
-                                        "min": 0,
-                                        "required": true
-                                    },
-                                    {
-                                        "label": "Timing Quantity",
-                                        "property": "timingQuantity",
-                                        "type": "text",
-                                        "required": true
-                                    },
-                                    {
-                                        "label": "Label",
-                                        "property": "timingLabel",
-                                        "type": "text"
-                                    },
-                                    {
-                                        "label": "Path",
-                                        "property": "timingPath",
-                                        "type": "text",
-                                        "placeholder": "Insert path to external resource"
-                                    }
-                                ]
-                            }
-
-                        ]
                     }
                 ];
 
@@ -181,7 +177,6 @@
                 };
 
             })
-
     </script>
 
 

@@ -66,6 +66,17 @@ export default function ukNgJsonTableForm($compile, $timeout) {
                     return { firstRow: firstRow, secondRow: secondRow };
                 };
 
+                scope.objectify = function(el) {
+                    var newObj = {};
+                    if (angular.isArray(el)) {
+                        el.forEach(e => {
+                            newObj[e] = e;
+                        });
+                        return newObj;
+                    }
+                    return el;
+                }
+
                 scope.generateTable = generateTable;
 
             }
@@ -117,7 +128,7 @@ export default function ukNgJsonTableForm($compile, $timeout) {
 
             element += '<div ng-switch-when="select">';
             element += '<select ng-if="s.select.label"  name="{{s.property}}" data-ng-model="m[s.property]" class="uk-width-1-1" ng-options="opt[s.select.label] for opt in s.select.options track by opt[s.select.id]" ng-required="s.required" />';
-            element += '<select ng-if="!s.select.label" name="{{s.property}}" data-ng-model="m[s.property]" class="uk-width-1-1" ng-options="opt for opt in s.select.options" ng-required="s.required" />';
+            element += '<select ng-if="!s.select.label" name="{{s.property}}" data-ng-model="m[s.property]" class="uk-width-1-1" ng-options="value as label for (label, value) in objectify(s.select.options)" ng-required="s.required" />';
             element += '</div>';
 
             //element += '<div ng-switch-when="autocomplete" class="uk-autocomplete uk-form uk-width-1-1"><input name="{{s.property}}" type="text" placeholder="{{s.placeholder?s.placeholder:\'\'}}" class="uk-width-1-1" ng-model="m[s.property]" data-uk-source-path="s.autocomplete.sourcePath" data-uk-source="s.autocomplete.source" data-uk-label="s.autocomplete.label" uk-ng-autocomplete required></div>';
@@ -141,7 +152,7 @@ export default function ukNgJsonTableForm($compile, $timeout) {
 
             element += '<div ng-switch-when="select">';
             element += '<select ng-if="h.select.label"  name="{{h.property}}" data-ng-model="newItem[h.property]" class="uk-width-1-1" ng-options="opt[h.select.label] for opt in h.select.options track by opt[h.select.id]" ng-required="h.required" />';
-            element += '<select ng-if="!h.select.label" name="{{h.property}}" data-ng-model="newItem[h.property]" class="uk-width-1-1" ng-options="opt for opt in h.select.options" ng-required="h.required" />';
+            element += '<select ng-if="!h.select.label" name="{{h.property}}" data-ng-model="newItem[h.property]" class="uk-width-1-1" ng-options="value as label for (label, value) in objectify(h.select.options)" ng-required="h.required" />';
             element += '</div>';
 
             element += '<div ng-switch-when="autocomplete" class="uk-autocomplete uk-form uk-width-1-1"><input name="{{h.property}}" type="text" placeholder="{{h.placeholder?h.placeholder:\'\'}}" class="uk-width-1-1" ng-model="newItem[h.property]"  data-uk-source-path="h.autocomplete.sourcePath"  data-uk-source="h.autocomplete.source" data-uk-label="h.autocomplete.label" uk-ng-autocomplete ng-required="h.required"></div>';
