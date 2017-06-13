@@ -40,7 +40,8 @@ export default function ukNgAutocomplete($http, $timeout) {
             ngModel.$render = function () {
                 var viewValue = ngModel.$viewValue;
                 if (typeof viewValue === "string" || viewValue instanceof String) {
-                    viewValue = source.find(s => s.value === viewValue);
+                    if(source.length)
+                        viewValue = source.find(s => s.value === viewValue);
                 } else {
                     if (viewValue) {
                         elem.val(viewValue.value);
@@ -117,7 +118,12 @@ export default function ukNgAutocomplete($http, $timeout) {
                     });
                     if (scope.ukOnSelect) {
                         $timeout(function () {
-                            scope.ukOnSelect({$selectedItem: scope.ukSource[ui.id]})
+                            var index = scope.ukSource.findIndex(function(el){
+                               if(typeof el === 'string' || el instanceof String)
+                                   return ui.id;
+                                return ui.id == el.id;
+                            });
+                            scope.ukOnSelect({$selectedItem: scope.ukSource[index]})
                         });
                     }
                 }
