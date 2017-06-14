@@ -1,6 +1,6 @@
 <form name="newItemForm" class="uk-form uk-form-stacked" ng-submit="addItem()" novalidate>
     <fieldset>
-        <table ng-init="table.hasChild = false" class="uk-table uk-ng-table-form" ng-class="{'uk-table-hover': canReorder}">
+        <table ng-init="table.hasChild = false" class="uk-table uk-ng-table-form">
             <thead ng-if="!allHeaderInHead">
             <tr>
                 <th ng-if="canReorder" class="reorder-button-group uk-text-center">
