@@ -40,7 +40,7 @@ export default function ukNgAutocomplete($http, $timeout) {
             ngModel.$render = function () {
                 var viewValue = ngModel.$viewValue;
                 if (typeof viewValue === "string" || viewValue instanceof String) {
-                    if(source.length)
+                    if(source instanceof Array && source.length>0)
                         viewValue = source.find(s => s.value === viewValue);
                 } else {
                     if (viewValue) {
