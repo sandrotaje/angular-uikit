@@ -29,13 +29,11 @@ $color-primary: blue !default;
     }
   }
   th.reorder-button-group {
-    width: 80px;
+    width: 40px;
     user-select: none;
     cursor: default;
     a{
       outline:none;
-      padding-left: 10px;
-      padding-right: 10px;
     }
     a.inactive {
       color: #ccc !important;

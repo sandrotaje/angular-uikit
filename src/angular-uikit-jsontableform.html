@@ -65,6 +65,20 @@
                         <!-- AUTOCOMPLETE -->
                         <div ng-switch-when="autocomplete">{{m[s.property][s.autocomplete.label]?m[s.property][s.autocomplete.label]:m[s.property]}}</div>
 
+                        <!-- TODO Modifica autocomplete non inserisce il valore vecchio-->
+                        <!--<div ng-switch-when="autocomplete" class="uk-autocomplete uk-form uk-width-1-1">
+                            <input name="{{s.property}}"
+                                   type="text"
+                                   placeholder="{{s.placeholder?s.placeholder:''}}"
+                                   class="uk-width-1-1" ng-model="m[s.property]"
+                                   data-uk-source-path="s.autocomplete.sourcePath"
+                                   data-uk-source="s.autocomplete.source"
+                                   data-uk-label="s.autocomplete.label"
+                                   uk-ng-autocomplete
+                                   required>
+                        </div>-->
+
+
                         <!-- SEQUENCE -->
                         <div ng-switch-when="sequence">{{m.sequence = $parent.$parent.$index + 1}}</div>
 
@@ -83,19 +97,6 @@
                                     class="uk-form-blank uk-width-1-1"
                                     ng-options="value as label for (label, value) in objectify(s.select.options)"
                                     ng-required="s.required"></select>
-                        </div>
-
-                        <!-- AUTOCOMPLETE -->
-                        <div ng-switch-when="autocomplete" class="uk-autocomplete uk-form uk-width-1-1">
-                            <input name="{{s.property}}"
-                                   type="text"
-                                   placeholder="{{s.placeholder?s.placeholder:''}}"
-                                   class="uk-width-1-1" ng-model="m[s.property]"
-                                   data-uk-source-path="s.autocomplete.sourcePath"
-                                   data-uk-source="s.autocomplete.source"
-                                   data-uk-label="s.autocomplete.label"
-                                   uk-ng-autocomplete
-                                   required>
                         </div>
 
                         <!-- NUMBER -->
