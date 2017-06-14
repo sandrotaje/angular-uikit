@@ -28,4 +28,19 @@ $color-primary: blue !default;
       position: absolute;
     }
   }
+  th.reorder-button-group {
+    width: 80px;
+    user-select: none;
+    cursor: default;
+    a{
+      outline:none;
+      padding-left: 10px;
+      padding-right: 10px;
+    }
+    a.inactive {
+      color: #ccc !important;
+      pointer-events: none;
+      cursor: default;
+    }
+  }
 }

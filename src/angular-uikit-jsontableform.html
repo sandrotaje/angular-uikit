@@ -1,0 +1,206 @@
+<form name="newItemForm" class="uk-form uk-form-stacked" ng-submit="addItem()" novalidate>
+    <fieldset>
+        <table ng-init="table.hasChild = false" class="uk-table uk-ng-table-form" ng-class="{'uk-table-hover': canReorder}">
+            <thead ng-if="!allHeaderInHead">
+            <tr>
+                <th ng-if="canReorder" class="reorder-button-group uk-text-center">
+                    <a ng-class="{'inactive': selectedIndex==null || selectedIndex==model.length-1}" ng-click="moveSelectedModelElementDown()" class="uk-text-primary uk-icon-small uk-icon-hover uk-icon-caret-down"></a>
+                    <a ng-class="{'inactive': !selectedIndex}" ng-click="moveSelectedModelElementUp()" class="uk-text-primary uk-icon-hover uk-icon-caret-up uk-icon-small"></a>
+                </th>
+                <th data-ng-repeat="h in structure">
+                    <div ng-switch="h.type">
+                        <div ng-switch-when="array" ng-init="table.hasChild = true"></div>
+                        <span ng-switch-default><i ng-if="h.icon" class="uk-icon-{{h.icon}}"></i> {{h.label}}</span>
+                    </div>
+                </th>
+                <th ng-if="!readOnly"></th>
+            </tr>
+            </thead>
+
+            <!-- TODO -->
+            <thead ng-if="allHeaderInHead" ng-init="thead = getHeaders(structure)">
+            <tr>
+                <th data-ng-repeat="h in thead.firstRow" colspan="{{h.colspan}}">{{h.label}}</th>
+            </tr>
+            <tr>
+                <th data-ng-repeat="h in thead.secondRow">{{h.label}}</th>
+            </tr>
+            </thead>
+            <!-- --- -->
+
+            <tbody>
+            <tr class="" data-ng-repeat="m in model track by $index" ng-mouseenter="rowHover=true" ng-mouseleave="rowHover=false">
+                <td ng-if="canReorder" class="uk-text-center uk-table-middle" style="cursor: pointer" ng-click="toggleIndexSelection($index)">
+                    <i class="uk-icon uk-icon-circle uk-text-primary" ng-show="selectedIndex==$index"></i>
+                    <i class="uk-icon uk-icon-circle-o uk-text-primary" ng-show="rowHover && selectedIndex!=$index"></i>
+                </td>
+                <td data-ng-repeat="s in structure" ng-class="{'uk-table-middle': s.type!= 'array'}">
+                    <div ng-switch="s.type">
+
+                        <!-- ARRAY -->
+                        <div ng-switch-when="array" class="uk-accordion"
+                             data-uk-accordion="{showfirst: false, collapse: false, toggle: '.uk-accordion-title-{{s.property}}', containers:'.uk-accordion-content-{{s.property}}'}">
+                            <a ng-init="accordion.show = false" ng-click="accordion.show=!accordion.show" class="uk-width-1-1 uk-button uk-button-primary uk-button-large uk-accordion-title-{{s.property}}">
+                                <span class="uk-float-left">
+                                    <i ng-if="s.icon" class="uk-icon-{{s.icon}}"></i> {{m[s.property].length}} {{s.label}}
+                                </span>
+
+                                <span class="uk-float-right">
+                                    <i ng-hide="accordion.show" class="uk-icon-caret-right"></i>
+                                    <i ng-show="accordion.show" class="uk-icon-caret-down"></i>
+                                </span>
+                            </a>
+                            <div class="uk-accordion-content-{{s.property}}">
+                                <div data-uk-ng-json-table-form
+                                     data-model="m[s.property]"
+                                     data-can-reorder="s.canReorder"
+                                     data-structure="s.items"
+                                     data-read-only="readOnly"
+                                     data-delete-confirm-label="deleteConfirmLabel"
+                                     data-all-header-in-head="allHeaderInHead">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- AUTOCOMPLETE -->
+                        <div ng-switch-when="autocomplete">{{m[s.property][s.autocomplete.label]?m[s.property][s.autocomplete.label]:m[s.property]}}</div>
+
+                        <!-- SEQUENCE -->
+                        <div ng-switch-when="sequence">{{m.sequence = $parent.$parent.$index + 1}}</div>
+
+                        <!-- SELECT -->
+                        <div ng-switch-when="select">
+                            <select ng-if="s.select.label"
+                                    name="{{s.property}}"
+                                    data-ng-model="m[s.property]"
+                                    class="uk-form-blank uk-width-1-1"
+                                    ng-options="opt[s.select.label] for opt in s.select.options track by opt[s.select.id]"
+                                    ng-required="s.required"></select>
+
+                            <select ng-if="!s.select.label"
+                                    name="{{s.property}}"
+                                    data-ng-model="m[s.property]"
+                                    class="uk-form-blank uk-width-1-1"
+                                    ng-options="value as label for (label, value) in objectify(s.select.options)"
+                                    ng-required="s.required"></select>
+                        </div>
+
+                        <!-- AUTOCOMPLETE -->
+                        <div ng-switch-when="autocomplete" class="uk-autocomplete uk-form uk-width-1-1">
+                            <input name="{{s.property}}"
+                                   type="text"
+                                   placeholder="{{s.placeholder?s.placeholder:''}}"
+                                   class="uk-width-1-1" ng-model="m[s.property]"
+                                   data-uk-source-path="s.autocomplete.sourcePath"
+                                   data-uk-source="s.autocomplete.source"
+                                   data-uk-label="s.autocomplete.label"
+                                   uk-ng-autocomplete
+                                   required>
+                        </div>
+
+                        <!-- NUMBER -->
+                        <input name="{{s.property}}"
+                               ng-switch-when="number"
+                               data-ng-model="m[s.property]"
+                               type="number"
+                               class="uk-form-blank uk-width-1-1"
+                               data-ng-max="{{s.number.max}}"
+                               data-ng-min="{{s.number.min}}"
+                               required>
+
+                        <!-- DEFAULT -->
+                        <input name="{{s.property}}"
+                               ng-switch-default
+                               data-ng-model="m[s.property]"
+                               type="{{s.type}}"
+                               placeholder="{{s.placeholder?s.placeholder:''}}"
+                               class="uk-form-blank uk-width-1-1"
+                               ng-required="s.required">
+
+                    </div>
+                </td>
+
+                <!-- TRASH BUTTON -->
+                <td ng-if="!readOnly" class="jstableform-button">
+                    <button type="button" class="uk-button uk-text-danger uk-width-1-1 uk-height-1-1" ng-click="removeItem($index)">
+                        <i class="uk-icon-trash uk-icon-small"></i>
+                    </button>
+                </td>
+            </tr>
+
+            <tr ng-if="!readOnly">
+                <td ng-if="canReorder"></td>
+
+                <td data-ng-repeat="h in structure">
+                    <div ng-switch="h.type">
+                        <!-- ARRAY -->
+                        <span ng-switch-when="array"></span>
+
+                        <!-- SEQUENCE -->
+                        <span ng-switch-when="sequence">#</span>
+
+                        <!-- SELECT -->
+                        <div ng-switch-when="select">
+                            <select ng-if="h.select.label"
+                                    name="{{h.property}}"
+                                    data-ng-model="newItem[h.property]"
+                                    class="uk-width-1-1"
+                                    ng-options="opt[h.select.label] for opt in h.select.options track by opt[h.select.id]"
+                                    ng-required="h.required"></select>
+
+                            <select ng-if="!h.select.label"
+                                    name="{{h.property}}"
+                                    data-ng-model="newItem[h.property]"
+                                    class="uk-width-1-1"
+                                    ng-options="value as label for (label, value) in objectify(h.select.options)"
+                                    ng-required="h.required"></select>
+                        </div>
+
+                        <!-- AUTOCOMPLETE -->
+                        <div ng-switch-when="autocomplete" class="uk-autocomplete uk-form uk-width-1-1">
+                            <input name="{{h.property}}"
+                                   type="text"
+                                   placeholder="{{h.placeholder?h.placeholder:''}}"
+                                   class="uk-width-1-1"
+                                   ng-model="newItem[h.property]"
+                                   data-uk-source-path="h.autocomplete.sourcePath"
+                                   data-uk-source="h.autocomplete.source"
+                                   data-uk-label="h.autocomplete.label"
+                                   uk-ng-autocomplete
+                                   ng-required="h.required">
+                        </div>
+
+                        <!-- NUMBER -->
+                        <input name="{{h.property}}"
+                               ng-switch-when="number"
+                               data-ng-model="newItem[h.property]"
+                               type="number"
+                               class="uk-width-1-1"
+                               data-ng-max="{{h.number.max}}"
+                               data-ng-min="{{h.number.min}}"
+                               ng-required="h.required">
+
+                        <!-- DEFAULT -->
+                        <input name="{{h.property}}"
+                               ng-switch-default
+                               data-ng-model="newItem[h.property]"
+                               type="{{h.type}}"
+                               placeholder="{{h.placeholder?h.placeholder:''}}"
+                               class="uk-width-1-1"
+                               ng-required="h.required">
+                    </div>
+                </td>
+
+                <td class="jstableform-button">
+                    <button ng-class="{'uk-text-success': newItemForm.$valid}"
+                            type="submit"
+                            class="uk-button uk-width-1-1 uk-height-1-1"
+                            data-ng-disabled="newItemForm.$invalid">
+                        <i class="uk-icon-plus uk-icon-small"></i>
+                    </button>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </fieldset>
+</form>

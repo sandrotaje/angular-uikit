@@ -6,6 +6,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/uikit/2.27.2/css/components/autocomplete.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/uikit/2.27.2/css/components/form-select.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/uikit/2.27.2/css/components/sortable.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/uikit/2.27.2/css/components/form-advanced.min.css" />
     <link rel="stylesheet" href="angular-uikit.min.css" />
 
     <style>
@@ -41,7 +42,7 @@
 
     <article class="uk-article">
         <h1 class="uk-article-title">JSON Table Form</h1>
-        <uk-ng-json-table-form model="vm.jsonTableModel" structure="vm.structure"></uk-ng-json-table-form>
+        <uk-ng-json-table-form model="vm.jsonTableModel" structure="vm.structure" can-reorder="true"></uk-ng-json-table-form>
         {{vm.jsonTableModel | json}}
     </article>
 
@@ -70,7 +71,25 @@
                 }];
 
                 vm.jsonTableModel = [{
-                    name: "ciao",
+                    name: "ciao1",
+                    keyValueObject: 1,
+                    valueArray: "Units",
+                    arrayOfObject: {
+                        id: 1,
+                        label: "Units"
+                    },
+                    priority: 1
+                },{
+                    name: "ciao2",
+                    keyValueObject: 1,
+                    valueArray: "Units",
+                    arrayOfObject: {
+                        id: 1,
+                        label: "Units"
+                    },
+                    priority: 1
+                },{
+                    name: "ciao3",
                     keyValueObject: 1,
                     valueArray: "Units",
                     arrayOfObject: {
@@ -82,6 +101,11 @@
 
                 vm.structure = [
                     {
+                        "icon": "sort-numeric-asc",
+                        "label": "sequence",
+                        "property": "sequence",
+                        "type": "sequence"
+                    },{
                         "label": "Name",
                         "property": "name",
                         "type": "text",
@@ -126,11 +150,24 @@
                         }
                     },
                     {
-                        "label": "Priority",
-                        "property": "priority",
-                        "type": "number",
-                        "min": 0,
-                        "required": true
+                        "icon": "barcode",
+                        "label": "asd",
+                        "property": "processRecipeProducts",
+                        "type": "array",
+                        "items": [
+                            {
+                                "icon": "sort-numeric-asc",
+                                "label": "",
+                                "property": "sequence",
+                                "type": "sequence"
+                            },
+                            {
+                                "label": "asd",
+                                "required": true,
+                                "property": "dosage",
+                                "type": "text"
+                            }
+                        ]
                     }
                 ];
 
