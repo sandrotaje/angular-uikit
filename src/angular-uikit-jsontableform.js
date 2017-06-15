@@ -19,7 +19,7 @@ export default function ukNgJsonTableForm($compile, $timeout) {
             if (!scope.model) {
                 scope.model = [];
             }
-
+            
             scope.addItem = function () {
                 scope.model.push(angular.copy(scope.newItem));
                 scope.newItem = {};

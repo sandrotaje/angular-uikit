@@ -1,4 +1,4 @@
-<form name="newItemForm" class="uk-form uk-form-stacked" ng-submit="addItem()" novalidate>
+<form class="uk-form uk-form-stacked" ng-submit="addItem()" novalidate>
     <fieldset>
         <table ng-init="table.hasChild = false" class="uk-table uk-ng-table-form">
             <thead ng-if="!allHeaderInHead">
@@ -57,7 +57,8 @@
                                      data-structure="s.items"
                                      data-read-only="readOnly"
                                      data-delete-confirm-label="deleteConfirmLabel"
-                                     data-all-header-in-head="allHeaderInHead">
+                                     data-all-header-in-head="allHeaderInHead"
+                                     data-property-name="m[s.property]">
                                 </div>
                             </div>
                         </div>
@@ -107,7 +108,7 @@
                                class="uk-form-blank uk-width-1-1"
                                data-ng-max="{{s.number.max}}"
                                data-ng-min="{{s.number.min}}"
-                               required>
+                               ng-required="s.required">
 
                         <!-- DEFAULT -->
                         <input name="{{s.property}}"
@@ -129,7 +130,7 @@
                 </td>
             </tr>
 
-            <tr ng-if="!readOnly">
+            <tr ng-if="!readOnly" ng-form="newItemForm" >
                 <td ng-if="canReorder"></td>
 
                 <td data-ng-repeat="h in structure">
