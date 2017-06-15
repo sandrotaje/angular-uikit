@@ -5,6 +5,7 @@ import ukNgCalendar from './angular-uikit-calendar';
 import ukNgSortableItem from './angular-uikit-sortable-item';
 import ukNgSortable from './angular-uikit-sortable';
 import ukNgNotAllowArrayDuplicate from './angular-uikit-notallowarrayduplicate';
+import hxSubmitOnEnter from './angular-uikit-hx-submit-on-enter';
 
 
 angular.module('angularUikit', [])
@@ -15,4 +16,4 @@ angular.module('angularUikit', [])
     .directive('ukNgSortableItem', ukNgSortableItem)
     .directive('ukNgSortable', ukNgSortable)
     .directive('ukNgNotAllowArrayDuplicate', ukNgNotAllowArrayDuplicate)
-    ;
+    .directive('hxSubmitOnEnter', hxSubmitOnEnter);
