@@ -4,7 +4,7 @@ export default function ukNgPagination() {
         scope: {
             listSize: '=',
             pageSize: '=',
-            currentPage: '?=',
+            currentPage: '=?',
             onPageChange: '&'
         },
         link: function (scope, element, attrs) {
