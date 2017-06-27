@@ -133,7 +133,7 @@
                 </td>
             </tr>
 
-            <tr ng-if="!readOnly" ng-form="newItemForm" hx-submit-on-enter="addItem()" >
+            <tr ng-if="!readOnly" ng-form="newItemForm" hx-submit-on-enter-allowed="submitOnEnter" hx-submit-on-enter="addItem()" >
                 <td ng-if="canReorder"></td>
 
                 <td data-ng-repeat="h in structure">

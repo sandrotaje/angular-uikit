@@ -11,7 +11,8 @@ export default function ukNgJsonTableForm($compile, $timeout) {
             readOnly: "=?",
             canReorder: "=?",
             allHeaderInHead: "=?",
-            deleteConfirmLabel: "=?"
+            deleteConfirmLabel: "=?",
+            submitOnEnter: "=?"
         },
         templateUrl: templateUrl,
         link: function (scope, element, attrs) {
