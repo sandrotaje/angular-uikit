@@ -23,13 +23,13 @@ export default function ukNgPagination() {
                 scope.onPageChange({$page: pageIndex});
             });
 
-            scope.$watch('scope.listSize', function () {
+            scope.$watch('listSize', function () {
                 pagination.options.items = scope.listSize;
                 pagination.pages = Math.ceil(scope.listSize / scope.pageSize);
                 pagination.render();
             });
 
-            scope.$watch('scope.pageSize', function () {
+            scope.$watch('pageSize', function () {
                 pagination.options.itemsOnPage = scope.pageSize;
                 pagination.pages = Math.ceil(scope.listSize / scope.pageSize);
                 pagination.render();
