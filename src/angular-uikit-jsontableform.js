@@ -1,5 +1,6 @@
 import "./angular-uikit-jsontableform.scss";
 var templateUrl = require('ngtemplate-loader!html-loader!./angular-uikit-jsontableform.html');
+var compactTemplateUrl = require('ngtemplate-loader!html-loader!./angular-uikit-jsontableform-compact.html');
 
 ukNgJsonTableForm.$inject = ['$compile', '$timeout'];
 export default function ukNgJsonTableForm($compile, $timeout) {
@@ -12,28 +13,43 @@ export default function ukNgJsonTableForm($compile, $timeout) {
             canReorder: "=?",
             allHeaderInHead: "=?",
             deleteConfirmLabel: "=?",
-            submitOnEnter: "=?"
+            submitOnEnter: "=?",
+            compact: "=?"
         },
-        templateUrl: templateUrl,
+        templateUrl: function (elm, attrs) {
+            return attrs.compact ? compactTemplateUrl : templateUrl
+        },
         link: function (scope, element, attrs) {
+
+            if (scope.compact) {
+                scope.arraysStructure = [];
+                scope.valuesStructure = [];
+
+                scope.structure.forEach(function (el) {
+                    if (el.type != "array")
+                        scope.valuesStructure.push(el);
+                    else
+                        scope.arraysStructure.push(el);
+                });
+                
+            }
+
             scope.newItem = {};
             if (!scope.model) {
                 scope.model = [];
             }
-            
+
             scope.addItem = function () {
                 scope.model.push(angular.copy(scope.newItem));
                 scope.newItem = {};
             };
 
             scope.removeItem = function removeItem(index) {
-
                 UIkit.modal.confirm(scope.deleteConfirmLabel || "Are you sure?", function () {
                     $timeout(function () {
                         scope.model.splice(index, 1)
                     });
                 });
-
             };
 
             scope.getHeaders = function (struct) {

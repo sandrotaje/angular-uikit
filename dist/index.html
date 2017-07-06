@@ -2,12 +2,12 @@
 
 <head>
     <title>Angular UIkit showcase</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/uikit/2.27.2/css/uikit.min.css" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/uikit/2.27.2/css/components/autocomplete.min.css" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/uikit/2.27.2/css/components/form-select.min.css" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/uikit/2.27.2/css/components/sortable.min.css" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/uikit/2.27.2/css/components/form-advanced.min.css" />
-    <link rel="stylesheet" href="angular-uikit.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/uikit/2.27.2/css/uikit.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/uikit/2.27.2/css/components/autocomplete.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/uikit/2.27.2/css/components/form-select.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/uikit/2.27.2/css/components/sortable.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/uikit/2.27.2/css/components/form-advanced.min.css"/>
+    <link rel="stylesheet" href="angular-uikit.min.css"/>
 
     <style>
         .alert-class {
@@ -20,42 +20,42 @@
 <body data-ng-controller="MainController as vm">
 
 
-    <article class="uk-article">
-        <h1 class="uk-article-title">Autocomplete</h1>
-        <input data-uk-ng-autocomplete data-ng-model="vm.selected" data-uk-on-select="vm.autocompOnSelect($selectedItem)" data-uk-source="vm.source">
-        <button class="uk-button" data-ng-click="vm.source = ['test1', 'change2', 'change3']">Change source</button>
-    </article>
+<article class="uk-article">
+    <h1 class="uk-article-title">Autocomplete</h1>
+    <input data-uk-ng-autocomplete data-ng-model="vm.selected" data-uk-on-select="vm.autocompOnSelect($selectedItem)" data-uk-source="vm.source">
+    <button class="uk-button" data-ng-click="vm.source = ['test1', 'change2', 'change3']">Change source</button>
+</article>
 
-    <article class="uk-article">
-        <h1 class="uk-article-title">Calendar</h1>
-        <uk-ng-calendar data-get-events-by-date="vm.getEventsByDate($startDate, $endDate)" data-on-event-selected="vm.onEventSelected($event)"></uk-ng-calendar>
-    </article>
+<article class="uk-article">
+    <h1 class="uk-article-title">Calendar</h1>
+    <uk-ng-calendar data-get-events-by-date="vm.getEventsByDate($startDate, $endDate)" data-on-event-selected="vm.onEventSelected($event)"></uk-ng-calendar>
+</article>
 
-    <article class="uk-article">
-        <h1 class="uk-article-title">Sortable</h1>
-        <div class="uk-grid uk-grid-match uk-sortable" data-uk-ng-sortable="{handleClass: 'uk-sortable-handle'}">
-            <div data-id="{{$index}}" data-uk-ng-sortable-item="p" data-ng-repeat="p in vm.sortList | orderBy: 'order'" data-uk-grid-margin>
-                <i data-ng-if="!conf.readonly" class="uk-icon-bars uk-text-success uk-sortable-handle"></i>Ciao
-            </div>
+<article class="uk-article">
+    <h1 class="uk-article-title">Sortable</h1>
+    <div class="uk-grid uk-grid-match uk-sortable" data-uk-ng-sortable="{handleClass: 'uk-sortable-handle'}">
+        <div data-id="{{$index}}" data-uk-ng-sortable-item="p" data-ng-repeat="p in vm.sortList | orderBy: 'order'" data-uk-grid-margin>
+            <i data-ng-if="!conf.readonly" class="uk-icon-bars uk-text-success uk-sortable-handle"></i>Ciao
         </div>
-    </article>
+    </div>
+</article>
 
-    <article class="uk-article">
-        <h1 class="uk-article-title">JSON Table Form</h1>
-        <uk-ng-json-table-form model="vm.jsonTableModel" structure="vm.structure" can-reorder="true" submit-on-enter="true"></uk-ng-json-table-form>
-        {{vm.jsonTableModel | json}}
-    </article>
+<article class="uk-article">
+    <h1 class="uk-article-title">JSON Table Form</h1>
+    <uk-ng-json-table-form compact="true" model="vm.jsonTableModel" structure="vm.structure" can-reorder="true" submit-on-enter="true"></uk-ng-json-table-form>
+    {{vm.jsonTableModel | json}}
+</article>
 
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.6/angular.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/2.27.2/js/uikit.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/2.27.2/js/components/autocomplete.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/2.27.2/js/components/sortable.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/2.27.2/js/components/accordion.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.6/angular.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/2.27.2/js/uikit.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/2.27.2/js/components/autocomplete.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/2.27.2/js/components/sortable.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/2.27.2/js/components/accordion.min.js"></script>
 
-    <script src="angular-uikit.min.js"></script>
-    <script>
-        angular.module('angularUIkitShowcase', ['angularUikit'])
+<script src="angular-uikit.min.js"></script>
+<script>
+    angular.module('angularUIkitShowcase', ['angularUikit'])
             .controller('MainController', function ($q, $timeout) {
                 var vm = this;
 
@@ -79,7 +79,7 @@
                         label: "Units"
                     },
                     priority: 1
-                },{
+                }, {
                     name: "ciao2",
                     keyValueObject: 1,
                     valueArray: "Units",
@@ -88,7 +88,7 @@
                         label: "Units"
                     },
                     priority: 1
-                },{
+                }, {
                     name: "ciao3",
                     keyValueObject: 1,
                     valueArray: "Units",
@@ -214,7 +214,7 @@
                 };
 
             })
-    </script>
+</script>
 
 
 </body>
