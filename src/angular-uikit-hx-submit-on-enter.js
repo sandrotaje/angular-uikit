@@ -8,7 +8,6 @@ export default function hxSubmitOnEnter($timeout) {
             hxSubmitOnEnterAllowed: "=?"
         },
         link: function (scope, element, attrs, formController) {
-            console.log(scope.hxSubmitOnEnterAllowed);
             if (scope.hxSubmitOnEnterAllowed) {
                 element.on("keydown keypress", function (event) {
                     if (event.which === 13 && formController.$valid) {

@@ -14,14 +14,19 @@ export default function ukNgJsonTableForm($compile, $timeout) {
             allHeaderInHead: "=?",
             deleteConfirmLabel: "=?",
             submitOnEnter: "=?",
-            compact: "=?"
+            compact: "=?",
+            oddIteration: "=?"
         },
         templateUrl: function (elm, attrs) {
             return attrs.compact ? compactTemplateUrl : templateUrl
         },
         link: function (scope, element, attrs) {
 
+            console.log(scope.oddIteration);
+
             if (scope.compact) {
+                if(scope.oddIteration==undefined)
+                    scope.oddIteration = false;
                 scope.arraysStructure = [];
                 scope.valuesStructure = [];
 

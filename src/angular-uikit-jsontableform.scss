@@ -1,8 +1,26 @@
 $color-primary: blue !default;
 
+$color-light-secondary: #EDB64B;
+$color-secondary: #E09E1E;
+$color-medium-secondary: #B17A0E;
+$color-dark-secondary: #8A5B00;
+
+$base-body-background: #e2e2e2;
+
+.jsontableform-highlight-border-odd{
+  border-left: 3px solid $color-secondary;
+}
+.jsontableform-highlight-border-even{
+  border-left: 3px solid $color-light-secondary;
+}
+
 .uk-table.uk-ng-table-form {
+
   tr {
     border: solid 1px #e2e2e2;
+    &.input-row{
+      background-color: #e2e2e2;
+    }
   }
   thead th {
     font-size: 95%;
