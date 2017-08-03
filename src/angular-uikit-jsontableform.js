@@ -18,11 +18,9 @@ export default function ukNgJsonTableForm($compile, $timeout) {
             oddIteration: "=?"
         },
         templateUrl: function (elm, attrs) {
-            return attrs.compact ? compactTemplateUrl : templateUrl
+            return !attrs.compact || attrs.compact==='false' ? templateUrl : compactTemplateUrl
         },
         link: function (scope, element, attrs) {
-
-            console.log(scope.oddIteration);
 
             if (scope.compact) {
                 if(scope.oddIteration==undefined)
@@ -36,7 +34,6 @@ export default function ukNgJsonTableForm($compile, $timeout) {
                     else
                         scope.arraysStructure.push(el);
                 });
-                
             }
 
             scope.newItem = {};
@@ -56,7 +53,7 @@ export default function ukNgJsonTableForm($compile, $timeout) {
                     });
                 });
             };
-
+            
             scope.getHeaders = function (struct) {
                 var firstRow = [];
                 var secondRow = [];

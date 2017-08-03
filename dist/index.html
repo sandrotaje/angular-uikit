@@ -42,7 +42,7 @@
 
 <article class="uk-article">
     <h1 class="uk-article-title">JSON Table Form</h1>
-    <uk-ng-json-table-form compact="true" model="vm.jsonTableModel" structure="vm.structure" can-reorder="true" submit-on-enter="true"></uk-ng-json-table-form>
+    <uk-ng-json-table-form model="vm.jsonTableModel" structure="vm.structure" can-reorder="true" submit-on-enter="true" read-only="true"></uk-ng-json-table-form>
     {{vm.jsonTableModel | json}}
 </article>
 
@@ -87,7 +87,10 @@
                         id: 1,
                         label: "Units"
                     },
-                    priority: 1
+                    priority: 1,
+                    processRecipeProducts:[
+                        {dosage: "asdas"}
+                    ]
                 }, {
                     name: "ciao3",
                     keyValueObject: 1,

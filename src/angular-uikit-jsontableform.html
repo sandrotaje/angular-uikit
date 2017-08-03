@@ -3,7 +3,7 @@
         <table ng-init="table.hasChild = false" class="uk-table uk-ng-table-form">
             <thead ng-if="!allHeaderInHead">
             <tr>
-                <th ng-if="canReorder" class="reorder-button-group uk-text-center">
+                <th ng-if="canReorder&&!readOnly" class="reorder-button-group uk-text-center">
                     <a ng-class="{'inactive': selectedIndex==null || selectedIndex==model.length-1}" ng-click="moveSelectedModelElementDown()" class="uk-text-primary uk-icon-small uk-icon-hover uk-icon-caret-down"></a>
                     <a ng-class="{'inactive': !selectedIndex}" ng-click="moveSelectedModelElementUp()" class="uk-text-primary uk-icon-hover uk-icon-caret-up uk-icon-small"></a>
                 </th>
@@ -30,7 +30,7 @@
 
             <tbody>
             <tr class="" data-ng-repeat="m in model track by $index" ng-mouseenter="rowHover=true" ng-mouseleave="rowHover=false">
-                <td ng-if="canReorder" class="uk-text-center uk-table-middle" style="cursor: pointer" ng-click="toggleIndexSelection($index)">
+                <td ng-if="canReorder && !readOnly" class="uk-text-center uk-table-middle" style="cursor: pointer" ng-click="toggleIndexSelection($index)">
                     <i class="uk-icon uk-icon-circle uk-text-primary" ng-show="selectedIndex==$index"></i>
                     <i class="uk-icon uk-icon-circle-o uk-text-primary" ng-show="rowHover && selectedIndex!=$index"></i>
                 </td>
@@ -38,9 +38,10 @@
                     <div ng-switch="s.type">
 
                         <!-- ARRAY -->
-                        <div ng-switch-when="array" class="uk-accordion"
-                             data-uk-accordion="{showfirst: false, collapse: false, toggle: '.uk-accordion-title-{{s.property}}', containers:'.uk-accordion-content-{{s.property}}'}">
-                            <a ng-init="accordion.show = false" ng-click="accordion.show=!accordion.show" class="uk-width-1-1 uk-button uk-button-primary uk-button-large uk-accordion-title-{{s.property}}">
+                        <div ng-switch-when="array">
+                            <div class="uk-accordion" ng-if="!readOnly || m[s.property].length>0"
+                                 data-uk-accordion="{showfirst: false, collapse: false, toggle: '.uk-accordion-title-{{s.property}}', containers:'.uk-accordion-content-{{s.property}}'}">
+                                <a ng-init="accordion.show = false" ng-click="accordion.show=!accordion.show" class="uk-width-1-1 uk-button uk-button-primary uk-button-large uk-accordion-title-{{s.property}}">
                                 <span class="uk-float-left">
                                     <i ng-if="s.icon" class="uk-icon-{{s.icon}}"></i> {{m[s.property].length}} {{s.label}}
                                 </span>
@@ -49,17 +50,25 @@
                                     <i ng-hide="accordion.show" class="uk-icon-caret-right"></i>
                                     <i ng-show="accordion.show" class="uk-icon-caret-down"></i>
                                 </span>
-                            </a>
-                            <div class="uk-accordion-content-{{s.property}}">
-                                <div data-uk-ng-json-table-form
-                                     data-model="m[s.property]"
-                                     data-can-reorder="s.canReorder"
-                                     data-structure="s.items"
-                                     data-read-only="readOnly"
-                                     data-delete-confirm-label="deleteConfirmLabel"
-                                     data-all-header-in-head="allHeaderInHead"
-                                     data-property-name="m[s.property]">
+                                </a>
+                                <div class="uk-accordion-content-{{s.property}}">
+                                    <div data-uk-ng-json-table-form
+                                         data-model="m[s.property]"
+                                         data-can-reorder="s.canReorder"
+                                         data-structure="s.items"
+                                         data-read-only="readOnly"
+                                         data-delete-confirm-label="deleteConfirmLabel"
+                                         data-all-header-in-head="allHeaderInHead"
+                                         data-property-name="m[s.property]">
+                                    </div>
                                 </div>
+                            </div>
+
+
+                            <div ng-if="readOnly&&!m[s.property]" class="uk-width-1-1 uk-button uk-button-large" ng-class="{'jsontableform-highlight-border-odd': !oddIteration, 'jsontableform-highlight-border-even': oddIteration}">
+                                <span class="uk-float-left uk-margin-left">
+                                    <i ng-if="s.icon" class="uk-icon-{{s.icon}}"></i> 0 {{s.label}}
+                                </span>
                             </div>
                         </div>
 
@@ -85,42 +94,63 @@
 
                         <!-- SELECT -->
                         <div ng-switch-when="select">
-                            <select ng-if="s.select.label"
-                                    name="{{s.property}}"
-                                    data-ng-model="m[s.property]"
-                                    class="uk-form-blank uk-width-1-1"
-                                    ng-options="opt[s.select.label] for opt in s.select.options track by opt[s.select.id]"
-                                    ng-required="s.required"
-                                    title="{{s.property}}"></select>
+                            <div ng-if="!readOnly">
+                                <select ng-if="s.select.label"
+                                        name="{{s.property}}"
+                                        data-ng-model="m[s.property]"
+                                        class="uk-form-blank uk-width-1-1"
+                                        ng-options="opt[s.select.label] for opt in s.select.options track by opt[s.select.id]"
+                                        ng-required="s.required"
+                                        title="{{s.property}}"></select>
 
-                            <select ng-if="!s.select.label"
-                                    name="{{s.property}}"
-                                    data-ng-model="m[s.property]"
-                                    class="uk-form-blank uk-width-1-1"
-                                    ng-options="value as label for (label, value) in objectify(s.select.options)"
-                                    ng-required="s.required"
-                                    title="{{s.property}}"></select>
+                                <select ng-if="!s.select.label"
+                                        name="{{s.property}}"
+                                        data-ng-model="m[s.property]"
+                                        class="uk-form-blank uk-width-1-1"
+                                        ng-options="value as label for (label, value) in objectify(s.select.options)"
+                                        ng-required="s.required"
+                                        title="{{s.property}}"></select>
+                            </div>
+                            <div ng-if="readOnly">
+                                <div ng-if="s.select.label">{{m[s.property][s.select.label]}}</div>
+                                <div ng-if="!s.select.label">{{m[s.property]}}</div>
+                            </div>
                         </div>
 
                         <!-- NUMBER -->
-                        <input name="{{s.property}}"
-                               ng-switch-when="number"
-                               data-ng-model="m[s.property]"
-                               type="number"
-                               class="uk-form-blank uk-width-1-1"
-                               data-ng-max="{{s.number.max}}"
-                               data-ng-min="{{s.number.min}}"
-                               ng-required="s.required"
-                               title="{{s.property}}">
+
+                        <div ng-switch-when="number">
+                            <input name="{{s.property}}"
+                                   data-ng-model="m[s.property]"
+                                   type="number"
+                                   class="uk-form-blank uk-width-1-1"
+                                   data-ng-max="{{s.number.max}}"
+                                   data-ng-min="{{s.number.min}}"
+                                   ng-required="s.required"
+                                   title="{{s.property}}"
+                                   ng-if="!readOnly">
+                            <div ng-if="readOnly">
+                                {{m[s.property]}}
+                            </div>
+                        </div>
+
 
                         <!-- DEFAULT -->
-                        <input name="{{s.property}}"
-                               ng-switch-default
-                               data-ng-model="m[s.property]"
-                               type="{{s.type}}"
-                               placeholder="{{s.placeholder?s.placeholder:''}}"
-                               class="uk-form-blank uk-width-1-1"
-                               ng-required="s.required">
+
+                        <div ng-switch-default>
+                            <input name="{{s.property}}"
+                                   data-ng-model="m[s.property]"
+                                   type="{{s.type}}"
+                                   placeholder="{{s.placeholder?s.placeholder:''}}"
+                                   class="uk-form-blank uk-width-1-1"
+                                   ng-required="s.required"
+                                   ng-if="!readOnly">
+
+                            <div ng-if="readOnly">
+                                {{m[s.property]}}
+                            </div>
+                        </div>
+
 
                     </div>
                 </td>
@@ -133,7 +163,7 @@
                 </td>
             </tr>
 
-            <tr ng-if="!readOnly" ng-form="newItemForm" hx-submit-on-enter-allowed="submitOnEnter" hx-submit-on-enter="addItem()" >
+            <tr ng-if="!readOnly" ng-form="newItemForm" hx-submit-on-enter-allowed="submitOnEnter" hx-submit-on-enter="addItem()">
                 <td ng-if="canReorder"></td>
 
                 <td data-ng-repeat="h in structure">
