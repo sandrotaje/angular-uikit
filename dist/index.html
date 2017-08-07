@@ -72,6 +72,7 @@
 
                 vm.jsonTableModel = [{
                     name: "ciao1",
+                    thumbnail: "200x100",
                     keyValueObject: 1,
                     valueArray: "Units",
                     arrayOfObject: {
@@ -82,6 +83,7 @@
                 }, {
                     name: "ciao2",
                     keyValueObject: 1,
+                    thumbnail: "200x100",
                     valueArray: "Units",
                     arrayOfObject: {
                         id: 1,
@@ -93,6 +95,7 @@
                     ]
                 }, {
                     name: "ciao3",
+                    thumbnail: "200x100",
                     keyValueObject: 1,
                     valueArray: "Units",
                     arrayOfObject: {
@@ -103,6 +106,19 @@
                 }];
 
                 vm.structure = [
+                    {
+                        "label": "Image",
+                        "property": "thumbnail",
+                        "type": "image",
+                        "image":{
+                            "interpolate":{
+                                "base":"https://getuikit.com/v2/docs/images/placeholder_DIMENSIONE.svg",
+                                "value":"DIMENSIONE"
+                            },
+                            "maxWidth":"100",
+                            "maxHeight":"100"
+                        }
+                    },
                     {
                         "icon": "sort-numeric-asc",
                         "label": "sequence",
