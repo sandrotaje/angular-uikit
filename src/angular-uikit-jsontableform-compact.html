@@ -30,7 +30,7 @@
 
                         <!-- IMAGE -->
                         <div ng-switch-when="image">
-                            <img class="uk-thumbnail" ng-style="{'max-width': s.image.maxWidth?s.image.maxWidth+'px':'100%', 'max-height': s.image.maxHeight?s.image.maxHeight+'px':'100%'}" ng-src="{{m[s.property]?(s.image.interpolate? s.image.interpolate.base.replace(s.image.interpolate.value, m[s.property]): m[s.property]):s.image.default}}" alt="">
+                            <img class="uk-thumbnail" ng-style="{'max-width': s.image.maxWidth?s.image.maxWidth+'px':'100%', 'max-height': s.image.maxHeight?s.image.maxHeight+'px':'100%'}" ng-src="{{m[s.property]?(s.image.interpolate? s.image.interpolate.base.replace(s.image.interpolate.value, s.image.interpolate.useId?m[s.property].id:m[s.property]): m[s.property]):s.image.default}}" alt="">
                         </div>
 
                         <!-- SELECT -->
