@@ -1,7 +1,7 @@
 <div class="uk-form uk-form-stacked">
     <fieldset>
         <table class="uk-table uk-ng-table-form" ng-class="{'jsontableform-highlight-border-odd': oddIteration, 'jsontableform-highlight-border-even': !oddIteration}">
-            <thead>
+            <thead ng-if="!noHeader">
             <tr>
                 <th ng-if="canReorder && !readOnly" class="reorder-button-group uk-text-center">
                     <a ng-class="{'inactive': selectedIndex==null || selectedIndex==model.length-1}" ng-click="moveSelectedModelElementDown()" class="uk-text-primary uk-icon-small uk-icon-hover uk-icon-caret-down"></a>

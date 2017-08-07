@@ -12,6 +12,7 @@ export default function ukNgJsonTableForm($compile, $timeout) {
             readOnly: "=?",
             canReorder: "=?",
             allHeaderInHead: "=?",
+            noHeader: "=?",
             deleteConfirmLabel: "=?",
             submitOnEnter: "=?",
             compact: "=?",
