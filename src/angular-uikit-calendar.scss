@@ -1,4 +1,5 @@
 $color-primary: blue !default;
+$color-primary-contrast: white !default;
 
 .calendar {
   .calendar-nav {
@@ -10,7 +11,7 @@ $color-primary: blue !default;
     a {
       vertical-align: middle;
       padding: 0 10px;
-      color: white;
+      color: $color-primary-contrast;
     }
   }
 
@@ -49,7 +50,7 @@ $color-primary: blue !default;
           line-height: 8px;
           font-size: 11px;
           background: $color-primary;
-          color: white;
+          color: $color-primary-contrast;
           padding: 3px 0 3px 5px;
           margin-bottom: 3px;
           cursor: pointer;
@@ -70,7 +71,7 @@ $color-primary: blue !default;
     .uk-panel {
       background: $color-primary;
       .uk-panel-title {
-        color: white;
+        color: $color-primary-contrast;
         margin: 0;
       }
     }
