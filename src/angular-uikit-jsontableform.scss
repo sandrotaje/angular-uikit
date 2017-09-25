@@ -1,4 +1,5 @@
 $color-primary: blue !default;
+$color-primary-contrast: white !default;
 
 $color-light-secondary: #EDB64B;
 $color-secondary: #E09E1E;
@@ -26,7 +27,7 @@ $base-body-background: #e2e2e2;
     font-size: 95%;
     vertical-align: bottom;
     text-align: left;
-    color: white;
+    color: $color-primary-contrast;
     background-color: $color-primary;
   }
   th, td {
@@ -35,7 +36,7 @@ $base-body-background: #e2e2e2;
 
   .uk-button-primary:active, .uk-button-primary.uk-active {
     background-color: darken($color-primary, 3%);
-    color: #fff;
+    color: $color-primary-contrast;
   }
 
   td.jstableform-button {
