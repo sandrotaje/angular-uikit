@@ -1,15 +1,15 @@
 $color-primary: blue !default;
 $color-primary-contrast: white !default;
 
-$color-light-secondary: #EDB64B;
-$color-secondary: #E09E1E;
-$color-medium-secondary: #B17A0E;
-$color-dark-secondary: #8A5B00;
+$color-light-secondary: #EDB64B !default;
+$color-secondary: #E09E1E !default;
+$color-medium-secondary: #B17A0E !default;
+$color-dark-secondary: #8A5B00 !default;
 
 $base-body-background: #e2e2e2;
 
 .jsontableform-highlight-border-odd{
-  border-left: 3px solid $color-secondary;
+  border-left: 3px solid $color-dark-secondary;
 }
 .jsontableform-highlight-border-even{
   border-left: 3px solid $color-light-secondary;
