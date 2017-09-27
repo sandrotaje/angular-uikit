@@ -22,8 +22,10 @@
 
 <article class="uk-article">
     <h1 class="uk-article-title">Autocomplete</h1>
-    <input data-uk-ng-autocomplete data-ng-model="vm.selected" data-uk-on-select="vm.autocompOnSelect($selectedItem)" data-uk-source="vm.source">
-    <button class="uk-button" data-ng-click="vm.source = ['test1', 'change2', 'change3']">Change source</button>
+    <input data-uk-ng-autocomplete data-ng-model="vm.selected" data-uk-on-select="vm.autocompOnSelect($selectedItem)" data-uk-label="'userId'" data-uk-source-path="'https://jsonplaceholder.typicode.com/posts'">
+    <button class="uk-button" data-ng-click="vm.source = [{id:1, pippo:'test1'},{id:43, pippo:'asdasd'},{id:42, pippo:'asdasd'}];">Change source</button>
+    Selected item: {{vm.selected}}
+
 </article>
 
 <article class="uk-article">
@@ -59,8 +61,11 @@
             .controller('MainController', function ($q, $timeout) {
                 var vm = this;
 
-                vm.selected = 'test1';
-                vm.source = ['test1', 'test2', 'test3'];
+                vm.selected = {"userId":2,"id":12,"title":"in quibusdam tempore odit est dolorem","body":"itaque id aut magnam\npraesentium quia et ea odit et ea voluptas et\nsapiente quia nihil amet occaecati quia id voluptatem\nincidunt ea est distinctio odio"};
+                //vm.source = ['test1', 'test2', 'test3'];
+
+                vm.source = [{id:1, pippo:'test1'},{id:56, pippo:'test2'},{id:123, pippo:'test3'}];
+
 
                 vm.sortList = [{
                     order: 1,

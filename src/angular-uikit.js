@@ -7,7 +7,6 @@ import ukNgSortable from './angular-uikit-sortable';
 import ukNgNotAllowArrayDuplicate from './angular-uikit-notallowarrayduplicate';
 import hxSubmitOnEnter from './angular-uikit-hx-submit-on-enter';
 
-
 angular.module('angularUikit', [])
     .directive('ukNgAutocomplete', ukNgAutocomplete)
     .directive('ukNgPagination', ukNgPagination)

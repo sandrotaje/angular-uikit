@@ -14,10 +14,7 @@ export default function ukNgAutocomplete($http, $timeout) {
 
             var resultsTemplate = scope.ukTemplate ? scope.ukTemplate : '<ul class="uk-nav uk-nav-autocomplete uk-autocomplete-results">{{~items}}<li data-id="{{$item.id}}" data-value="{{$item.value}}"><a>{{$item.value}}</a></li>{{/items}}</ul>';
 
-            var source = scope.ukSourcePath ? callback : scope.ukSource ? populateSource(scope.ukSource) : [{
-                id: undefined,
-                value: 'No source detected!'
-            }];
+            var source = scope.ukSourcePath ? callback : scope.ukSource ? populateSource(scope.ukSource) : [{id: undefined, value: 'No source detected!'}];
 
             var autocomplete = UIkit.autocomplete(elem.parent(), {
                 source: source,
@@ -27,37 +24,22 @@ export default function ukNgAutocomplete($http, $timeout) {
             });
 
             scope.$watch('ukSource', function () {
-                autocomplete.options.source = source = scope.ukSourcePath ? callback : scope.ukSource ? populateSource(scope.ukSource) : [{
-                    id: undefined,
-                    value: 'No source detected!'
-                }];
-                ngModel.$render();
+                autocomplete.options.source = source = scope.ukSourcePath ? callback : scope.ukSource ? populateSource(scope.ukSource) : [{id: undefined, value: 'No source detected!'}];
+                //ngModel.$render();
             });
 
+            function populateSource(objects) {
+                let autocompleteRenderedObjects = [];
+                objects.forEach(function (element, index) {
+                    var label = (typeof element === 'string' || element instanceof String) ? element : element[scope.ukLabel] ? element[scope.ukLabel] : 'Label missing!';
+                    autocompleteRenderedObjects.push({id: element.id ? element.id : index, value: label});
+                });
+                return autocompleteRenderedObjects;
+            }
 
-            scope.model = {};
-
-            ngModel.$render = function () {
-                var viewValue = ngModel.$viewValue;
-                if (typeof viewValue === "string" || viewValue instanceof String) {
-                    if(source.length)
-                        viewValue = source.find(s => s.value === viewValue);
-                } else {
-                    if (viewValue) {
-                        elem.val(viewValue.value);
-
-                        scope.model.id = viewValue.id;
-                        scope.model.value = viewValue.value;
-
-                    } else {
-                        scope.model = {};
-                        elem.val('')
-                    }
-                }
-            };
-
+            
             function callback(release) {
-                var search = {};
+                let search = {};
                 search[scope.ukLabel ? scope.ukLabel : "search"] = ngModel.$viewValue;
                 $http({
                     method: "GET",
@@ -74,67 +56,56 @@ export default function ukNgAutocomplete($http, $timeout) {
                 );
             }
 
-            function populateSource(objects) {
-                var autocompleteRenderedObjects = [];
-                objects.forEach(function (element, index) {
-                    var label = (typeof element === 'string' || element instanceof String) ? element : element[scope.ukLabel] ? element[scope.ukLabel] : 'Label missing!';
-                    autocompleteRenderedObjects.push({id: element.id ? element.id : index, value: label});
-                });
-                return autocompleteRenderedObjects;
-            }
-
-            scope.$watch('model.id + model.name', function () {
-                if (scope.model.id || scope.model.name) {
-                    ngModel.$setViewValue({
-                        id: scope.model.id,
-                        value: scope.model.value
-                    });
-                }
-            });
-
             ngModel.$formatters = [(function (value) {
-                return value;
+                let realValue = scope.ukLabel ? value[scope.ukLabel] : value;
+
+                if (!angular.isArray(source) || source.some(e=>realValue == e.value))
+                    return realValue;
+
+                return undefined;
             })];
 
-            ngModel.$parsers.unshift(function (value) {
-                if (value instanceof Object) {
-                    if (scope.ukSource && scope.ukSource[0].id) {
-                        return scope.ukSource.find(function (element) {
-                            return element.id == value.id;
-                        });
-                    }
-                    return scope.ukSource[value.id];
-                }
-                return undefined;
-            });
+            ngModel.$parsers.unshift(function (viewValue) {
+                    if (typeof viewValue !== 'string' && !(viewValue instanceof String))
+                        return viewValue;
 
-            elem.off('change');
+                    if (!angular.isArray(source)) { //if source is not an array it is a callback function
+                        return {id: undefined, value: viewValue, [scope.ukLabel]: viewValue};
+                    }
+
+                    return source.find(e=>e.value == viewValue);
+
+                },
+                function (viewValue) {
+                    if (!angular.isArray(scope.ukSource)) { //No source means callback function (init)
+                        return viewValue;
+                    }
+
+                    return scope.ukSource.find(function (el) {
+                        if (el.id)
+                            return el.id == viewValue.id;
+
+                        return el == viewValue.value || el[scope.ukLabel] == viewValue.value;
+                    });
+                });
 
             autocomplete.on('selectitem.uk.autocomplete', function (event, ui, obj) {
                 if (ui) {
-                    ngModel.$setViewValue({
-                        id: ui.id,
-                        value: ui.value
-                    });
+                    ngModel.$setViewValue(ui);
+                    
                     if (scope.ukOnSelect) {
                         $timeout(function () {
-                            var index = scope.ukSource.findIndex(function(el){
-                               if(typeof el === 'string' || el instanceof String)
-                                   return ui.id;
-                                return ui.id == el.id;
+                            var item = scope.ukSource.find(function (el) {
+                                if (el.id)
+                                    return el.id == ui.id;
+
+                                return el == ui.value || el[scope.ukLabel] == ui.value;
                             });
-                            scope.ukOnSelect({$selectedItem: scope.ukSource[index]})
+                            scope.ukOnSelect({$selectedItem: item})
                         });
                     }
                 }
 
-            });
-
-            elem.on('blur', function () {
-                if (!ngModel.$modelValue) {
-                    elem.val('');
-                    ngModel.$setViewValue(undefined);
-                }
             });
         }
     }
