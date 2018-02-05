@@ -1,98 +1,98 @@
 var templateUrl = require('ngtemplate-loader!html-loader!./angular-uikit-calendar.html');
 import './angular-uikit-calendar.scss';
 
-export default function ukNgCalendar() {
-        return {
-            restrict: "EA",
-            scope: {
-                date: "=?",
-                getEventsByDate: "&?",
-                onEventSelected: "&?"
-            },
-            templateUrl: templateUrl,
-            link: function (scope, element, attrs) {
+export default function ukNgCalendar($timeout) {
+    return {
+        restrict: "EA",
+        scope: {
+            date: "=?",
+            getEventsByDate: "&?",
+            onEventSelected: "&?"
+        },
+        templateUrl: templateUrl,
+        link: function (scope, element, attrs) {
 
-                var ONE_DAY = 24 * 60 * 60 * 1000;
+            var ONE_DAY = 24 * 60 * 60 * 1000;
+            scope.years = [2014, 2015, 2016, 2017];
+            scope.months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
-                scope.hasDaySelected = function (w) {
-                    if (!w) return false;
-                    for (var i = 0; i < w.length; i++) {
-                        var el = w[i];
-                        if (el.isSelected) return true;
-                    }
-                    return false;
-                };
+            scope.hasDaySelected = function (w) {
+                if (!w) return false;
+                for (var i = 0; i < w.length; i++) {
+                    var el = w[i];
+                    if (el.isSelected) return true;
+                }
+                return false;
+            };
 
-                scope.changeDate = function () {
-                    scope.date = new Date(Date.UTC(scope.yearSelected, scope.months.indexOf(scope.monthSelected), 1));
-                };
+            scope.changeDate = function () {
+                scope.date = new Date(Date.UTC(scope.yearSelected, scope.months.indexOf(scope.monthSelected), 1));
+            };
 
-                scope.addMonth = function (num) {
+            scope.addMonth = function (num) {
 
-                    var futureMonth = scope.date.getUTCMonth() + num;
+                var futureMonth = scope.date.getUTCMonth() + num;
 
-                    //11 is december
-                    if (futureMonth > 11) {
-                        scope.date = new Date(Date.UTC(scope.date.getUTCFullYear() + 1, 0, 1));
-                    } else if (futureMonth < 0) {
-                        scope.date = new Date(Date.UTC(scope.date.getUTCFullYear() - 1, 11, 1));
-                    } else {
-                        scope.date = new Date(Date.UTC(scope.date.getUTCFullYear(), futureMonth, 1));
-                    }
-
-                };
-
-                scope.getDaysRemaining = function(numDays, day) {
-                    var dayRem = 7 - day;
-                    var num = numDays + 1;
-                    if (num > dayRem) {
-                        return dayRem;
-                    }
-                    return num;
+                //11 is december
+                if (futureMonth > 11) {
+                    scope.date = new Date(Date.UTC(scope.date.getUTCFullYear() + 1, 0, 1));
+                } else if (futureMonth < 0) {
+                    scope.date = new Date(Date.UTC(scope.date.getUTCFullYear() - 1, 11, 1));
+                } else {
+                    scope.date = new Date(Date.UTC(scope.date.getUTCFullYear(), futureMonth, 1));
                 }
 
-                scope.selectEvent = function(e) {
-                    scope.onEventSelected && scope.onEventSelected({$event: e});
-                }
+            };
 
-                scope.getStyle = function(style) {
-                    var ngStyle = {};
-                    if (style) {
-                        if (style.color) {
-                            ngStyle['color'] = style.color;
-                        }
-                        if (style.background) {
-                            ngStyle['background'] = style.background;
-                        }
-                        return ngStyle;
+            scope.getDaysRemaining = function (numDays, day) {
+                var dayRem = 7 - day;
+                var num = numDays + 1;
+                if (num > dayRem) {
+                    return dayRem;
+                }
+                return num;
+            };
+
+            scope.selectEvent = function (e) {
+                scope.onEventSelected && scope.onEventSelected({$event: e});
+            };
+
+            scope.getStyle = function (style) {
+                var ngStyle = {};
+                if (style) {
+                    if (style.color) {
+                        ngStyle['color'] = style.color;
                     }
-                    return {};
-                }
-
-                scope.getNumDays = function(startDate, endDate) {
-                    var startDate = new Date(startDate.getTime());
-                    var endDate = new Date(endDate.getTime());
-                    var tempDay = 1;
-                    if (endDate.getUTCMonth() != startDate.getUTCMonth()) {
-                        tempDay += endDate.getUTCDate();
-                        endDate.setUTCDate(0);
-                        
+                    if (style.background) {
+                        ngStyle['background'] = style.background;
                     }
-                    return endDate.getUTCDate() - startDate.getUTCDate() + tempDay;
+                    return ngStyle;
                 }
+                return {};
+            };
+
+            scope.getNumDays = function (startDate, endDate) {
+                var startDate = new Date(startDate.getTime());
+                var endDate = new Date(endDate.getTime());
+                var tempDay = 1;
+                if (endDate.getUTCMonth() != startDate.getUTCMonth()) {
+                    tempDay += endDate.getUTCDate();
+                    endDate.setUTCDate(0);
+
+                }
+                return endDate.getUTCDate() - startDate.getUTCDate() + tempDay;
+            };
 
 
-                scope.$watch("date", function () {
+            scope.$watch("date", function () {
+
+                $timeout(function () {
 
                     if (!scope.date) {
                         scope.date = new Date();
                     }
 
                     var date = angular.copy(scope.date);
-
-
-                    scope.years = [2014, 2015, 2016, 2017];
-                    scope.months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
                     scope.yearSelected = date.getUTCFullYear();
                     scope.monthSelected = scope.months[date.getUTCMonth()];
@@ -135,7 +135,7 @@ export default function ukNgCalendar() {
                                 isToday: tmpDay.getTime() === today.getTime(),
                                 date: tmpDay,
                                 differentMonth: tmpDay.getUTCMonth() !== date.getUTCMonth(),
-                                events: eventMap[tmpDay.getUTCFullYear()+""+tmpDay.getUTCMonth()+""+tmpDay.getUTCDate()]
+                                events: eventMap[tmpDay.getUTCFullYear() + "" + tmpDay.getUTCMonth() + "" + tmpDay.getUTCDate()]
                             };
                             if (!month.weeks[week]) {
                                 month.weeks[week] = [];
@@ -162,10 +162,10 @@ export default function ukNgCalendar() {
                                 e.numDays = scope.getNumDays(e.startDate, e.endDate);
                                 e.firstDay = true;
                                 while (tmpDay <= e.endDate) {
-                                    if (!eventMap[tmpDay.getUTCFullYear()+""+tmpDay.getUTCMonth()+""+tmpDay.getUTCDate()]) {
-                                        eventMap[tmpDay.getUTCFullYear()+""+tmpDay.getUTCMonth()+""+tmpDay.getUTCDate()] = [];
+                                    if (!eventMap[tmpDay.getUTCFullYear() + "" + tmpDay.getUTCMonth() + "" + tmpDay.getUTCDate()]) {
+                                        eventMap[tmpDay.getUTCFullYear() + "" + tmpDay.getUTCMonth() + "" + tmpDay.getUTCDate()] = [];
                                     }
-                                    eventMap[tmpDay.getUTCFullYear()+""+tmpDay.getUTCMonth()+""+tmpDay.getUTCDate()].push(angular.copy(e));
+                                    eventMap[tmpDay.getUTCFullYear() + "" + tmpDay.getUTCMonth() + "" + tmpDay.getUTCDate()].push(angular.copy(e));
                                     tmpDay = new Date(tmpDay.getTime() + 24 * 60 * 60 * 1000);
                                     e.firstDay = false;
                                 }
@@ -176,11 +176,8 @@ export default function ukNgCalendar() {
                             console.log(error);
                         })
                     }
-
-
-                });
-
-
-            }
+                }, 0);
+            });
         }
     }
+}

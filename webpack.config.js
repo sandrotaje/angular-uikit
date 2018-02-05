@@ -1,12 +1,13 @@
 var webpack = require("webpack");
 var CopyWebpackPlugin = require('copy-webpack-plugin');
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
+var path = require('path')
 
 
 var config = {
     entry: "./src/angular-uikit.js",
     output: {
-        path: "./dist",
+        path: path.join(__dirname, 'dist'),
         filename: "angular-uikit.min.js"
     },
     devtool: "cheap-module-source-map",
