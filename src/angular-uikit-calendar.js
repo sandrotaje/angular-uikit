@@ -1,7 +1,7 @@
 var templateUrl = require('ngtemplate-loader!html-loader!./angular-uikit-calendar.html');
 import './angular-uikit-calendar.scss';
 
-export default function ukNgCalendar($timeout) {
+export default function ukNgCalendar() {
     return {
         restrict: "EA",
         scope: {
@@ -12,36 +12,62 @@ export default function ukNgCalendar($timeout) {
         templateUrl: templateUrl,
         link: function (scope, element, attrs) {
 
-            var ONE_DAY = 24 * 60 * 60 * 1000;
-            scope.years = [2014, 2015, 2016, 2017];
-            scope.months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+            const ONE_DAY = 24 * 60 * 60 * 1000;
+            const TODAY = new Date();
+            //Set hours, minutes, seconds and millis to 0
+            TODAY.setUTCHours(0, 0, 0, 0);
 
-            scope.hasDaySelected = function (w) {
-                if (!w) return false;
-                for (var i = 0; i < w.length; i++) {
-                    var el = w[i];
-                    if (el.isSelected) return true;
-                }
-                return false;
+            //Use dates for locale translation
+            //TODO: there must be a better way...
+            scope.months = {
+                0: new Date(1970, 0),
+                1: new Date(1970, 1),
+                2: new Date(1970, 2),
+                3: new Date(1970, 3),
+                4: new Date(1970, 4),
+                5: new Date(1970, 5),
+                6: new Date(1970, 6),
+                7: new Date(1970, 7),
+                8: new Date(1970, 8),
+                9: new Date(1970, 9),
+                10: new Date(1970, 10),
+                11: new Date(1970, 11),
             };
 
+            scope.days = {
+                0: new Date(1970, 0, 5),
+                1: new Date(1970, 0, 6),
+                2: new Date(1970, 0, 7),
+                3: new Date(1970, 0, 8),
+                4: new Date(1970, 0, 9),
+                5: new Date(1970, 0, 10),
+                6: new Date(1970, 0, 11),
+            };
+
+            scope.years = [];
+            for (let i = 2015; i < TODAY.getFullYear() + 5; i++) {
+                scope.years.push(i);
+            }
+
+            scope.selection = {
+                year: TODAY.getFullYear(),
+                month: scope.months[TODAY.getMonth()]
+            };
+
+            scope.date = TODAY;
+            generateCalendar();
+
             scope.changeDate = function () {
-                scope.date = new Date(Date.UTC(scope.yearSelected, scope.months.indexOf(scope.monthSelected), 1));
+                scope.date = new Date(Date.UTC(scope.selection.year, scope.selection.month.getMonth(), 1));
+                generateCalendar();
             };
 
             scope.addMonth = function (num) {
+                scope.date.setUTCMonth(scope.date.getUTCMonth() + num)
+                generateCalendar();
 
-                var futureMonth = scope.date.getUTCMonth() + num;
-
-                //11 is december
-                if (futureMonth > 11) {
-                    scope.date = new Date(Date.UTC(scope.date.getUTCFullYear() + 1, 0, 1));
-                } else if (futureMonth < 0) {
-                    scope.date = new Date(Date.UTC(scope.date.getUTCFullYear() - 1, 11, 1));
-                } else {
-                    scope.date = new Date(Date.UTC(scope.date.getUTCFullYear(), futureMonth, 1));
-                }
-
+                scope.selection.year = scope.date.getUTCFullYear();
+                scope.selection.month = scope.months[scope.date.getUTCMonth()];
             };
 
             scope.getDaysRemaining = function (numDays, day) {
@@ -57,127 +83,72 @@ export default function ukNgCalendar($timeout) {
                 scope.onEventSelected && scope.onEventSelected({$event: e});
             };
 
-            scope.getStyle = function (style) {
-                var ngStyle = {};
-                if (style) {
-                    if (style.color) {
-                        ngStyle['color'] = style.color;
-                    }
-                    if (style.background) {
-                        ngStyle['background'] = style.background;
-                    }
-                    return ngStyle;
-                }
-                return {};
-            };
+            function generateCalendar() {
+                scope.loading = true;
+                //First get the first day of the month from selected date
+                var previousMonday = new Date(Date.UTC(scope.date.getUTCFullYear(), scope.date.getUTCMonth(), 1));
+                //Then retrieve the first occurrence of a monday previous of the first day of the month
+                previousMonday.setUTCDate(previousMonday.getUTCDate() - (previousMonday.getUTCDay() + 6) % 7);
 
-            scope.getNumDays = function (startDate, endDate) {
-                var startDate = new Date(startDate.getTime());
-                var endDate = new Date(endDate.getTime());
-                var tempDay = 1;
-                if (endDate.getUTCMonth() != startDate.getUTCMonth()) {
-                    tempDay += endDate.getUTCDate();
-                    endDate.setUTCDate(0);
+                if (!scope.getEventsByDate) {
+                    generateMonth(previousMonday, []);
+                } else {
+                    scope.getEventsByDate({$startDate: previousMonday, $endDate: new Date(previousMonday.getTime() + 42 * ONE_DAY)}).then(function (events) {
+                        var eventMap = {};
+                        events.forEach(function (e) {
 
-                }
-                return endDate.getUTCDate() - startDate.getUTCDate() + tempDay;
-            };
+                            e.original = Object.assign({}, e);
+                            e.startDate = angular.isDate(e.startDate) ? e.startDate : new Date(e.startDate);
+                            e.endDate = angular.isDate(e.endDate) ? e.endDate : new Date(e.endDate);
 
-
-            scope.$watch("date", function () {
-
-                $timeout(function () {
-
-                    if (!scope.date) {
-                        scope.date = new Date();
-                    }
-
-                    var date = angular.copy(scope.date);
-
-                    scope.yearSelected = date.getUTCFullYear();
-                    scope.monthSelected = scope.months[date.getUTCMonth()];
-
-
-                    date.setUTCHours(0);
-                    date.setUTCMinutes(0);
-                    date.setUTCSeconds(0);
-                    date.setUTCMilliseconds(0);
-
-                    var today = new Date();
-                    today.setUTCHours(0);
-                    today.setUTCMinutes(0);
-                    today.setUTCSeconds(0);
-                    today.setUTCMilliseconds(0);
-
-                    var startDate = new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), 1));
-
-                    while (startDate.getUTCDay() != 1) {
-                        startDate = new Date(startDate.getTime() - ONE_DAY);
-                    }
-
-                    var tmpDay = new Date(startDate.getTime());
-
-                    var month = {
-                        weeks: []
-                    };
-
-
-                    var generateMonth = function (tmpDay, eventMap) {
-                        var week = 0;
-                        for (var i = 0; i < 42; i++) {
-
-                            if (tmpDay.getUTCDay() == 1) {
-                                week++;
-                            }
-
-                            var jsonDay = {
-                                number: tmpDay.getUTCDate(),
-                                isToday: tmpDay.getTime() === today.getTime(),
-                                date: tmpDay,
-                                differentMonth: tmpDay.getUTCMonth() !== date.getUTCMonth(),
-                                events: eventMap[tmpDay.getUTCFullYear() + "" + tmpDay.getUTCMonth() + "" + tmpDay.getUTCDate()]
-                            };
-                            if (!month.weeks[week]) {
-                                month.weeks[week] = [];
-                            }
-                            month.weeks[week].push(jsonDay);
-                            tmpDay = new Date(tmpDay.getTime() + ONE_DAY);
-                        }
-
-                        scope.month = month;
-                    };
-
-                    if (!scope.getEventsByDate) {
-                        generateMonth(tmpDay, []);
-                    } else {
-                        scope.getEventsByDate({$startDate: startDate, $endDate: new Date(startDate.getTime() + 42 * ONE_DAY)}).then(function (events) {
-                            var eventMap = {};
-                            var events = [...events];
-                            events.forEach(function (e) {
-                                e.original = Object.assign({}, e);
-                                e.startDate = angular.isDate(e.startDate) ? e.startDate : new Date(e.startDate);
-                                e.endDate = angular.isDate(e.endDate) ? e.endDate : new Date(e.endDate);
-
-                                var tmpDay = e.startDate;
-                                e.numDays = scope.getNumDays(e.startDate, e.endDate);
-                                e.firstDay = true;
-                                while (tmpDay <= e.endDate) {
-                                    if (!eventMap[tmpDay.getUTCFullYear() + "" + tmpDay.getUTCMonth() + "" + tmpDay.getUTCDate()]) {
-                                        eventMap[tmpDay.getUTCFullYear() + "" + tmpDay.getUTCMonth() + "" + tmpDay.getUTCDate()] = [];
-                                    }
-                                    eventMap[tmpDay.getUTCFullYear() + "" + tmpDay.getUTCMonth() + "" + tmpDay.getUTCDate()].push(angular.copy(e));
-                                    tmpDay = new Date(tmpDay.getTime() + 24 * 60 * 60 * 1000);
-                                    e.firstDay = false;
+                            var tmpDay = angular.copy(e.startDate);
+                            e.numDays = Math.round((e.endDate.getTime() - e.startDate.getTime()) / ONE_DAY);
+                            e.firstDay = true;
+                            while (tmpDay.getTime() <= e.endDate.getTime()) {
+                                let index = tmpDay.getUTCFullYear() + "" + tmpDay.getMonth() + "" + tmpDay.getDate();
+                                if (!eventMap[index]) {
+                                    eventMap[index] = [];
                                 }
-                            });
+                                eventMap[index].push(angular.copy(e));
+                                tmpDay.setUTCDate(tmpDay.getUTCDate() + 1);
+                                e.firstDay = false;
+                            }
+                        });
+                        generateMonth(previousMonday, eventMap);
+                    }, function (error) {
+                        console.log(error);
+                    })
+                }
+            }
 
-                            generateMonth(tmpDay, eventMap);
-                        }, function (error) {
-                            console.log(error);
-                        })
+            function generateMonth(tmpDay, eventMap) {
+                var month = {
+                    weeks: []
+                };
+                var week = 0;
+                for (let i = 0; i < 42; i++) {
+
+                    if (tmpDay.getUTCDay() === 1) {
+                        week++;
                     }
-                }, 0);
-            });
+
+                    var jsonDay = {
+                        number: tmpDay.getUTCDate(),
+                        isToday: tmpDay.getTime() === TODAY.getTime(),
+                        date: tmpDay,
+                        differentMonth: tmpDay.getUTCMonth() !== scope.date.getUTCMonth(),
+                        events: eventMap[tmpDay.getUTCFullYear() + "" + tmpDay.getMonth() + "" + tmpDay.getDate()]
+                    };
+                    if (!month.weeks[week]) {
+                        month.weeks[week] = [];
+                    }
+                    month.weeks[week].push(jsonDay);
+                    tmpDay.setUTCDate(tmpDay.getUTCDate() + 1);
+                }
+
+                scope.month = month;
+                scope.loading = false;
+            }
         }
     }
 }

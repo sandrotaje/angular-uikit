@@ -1,42 +1,41 @@
 <div class="uk-grid uk-grid-collapse calendar">
-   <div class="uk-width-1-1 calendar-nav">
-      <a href="" class="uk-icon-hover uk-icon-chevron-left" ng-click="addMonth(-1)"></a>
-      <div class="uk-form-select" data-uk-form-select="{target:'a'}">
-         <a>{{monthSelected}}</a> 
-         <select ng-model="monthSelected" ng-change="changeDate()">
-            <option data-ng-repeat="m in months" ng-value="m">{{m}}</option>
-         </select>
-      </div>
-      <div class="uk-form-select" data-uk-form-select="{target:'a'}">
-         <a>{{yearSelected}}</a> 
-         <select ng-model="yearSelected" ng-change="changeDate()">
-            <option data-ng-repeat="y in years | orderBy" ng-value="y">{{y}}</option>
-         </select>
-      </div>
-      <a href="" class="uk-icon-hover uk-icon-chevron-right" ng-click="addMonth(1)"></a>
-   </div>
-   <div class="uk-width-1-1 calendar-header">
-      <div class="uk-grid uk-grid-collapse calendar-header">
-         <div class="uk-width calendar-header-day" style="width: calc(100%/7)" data-ng-repeat="d in ['Lun','Mar','Mer','Gio','Ven','Sab','Dom']">
-            <div class="uk-panel uk-panel-box">
-               <h3 class="uk-panel-title">{{d}}</h3>
-            </div>
-         </div>
-      </div>
-   </div>
-   <div class="uk-width-1-1 calendar-body">
-      <div class="uk-grid uk-grid-collapse" data-ng-repeat="w in month.weeks" data-uk-grid-match="{target:'.uk-panel'}">
-         <div class="uk-width calendar-day" style="width: calc(100%/7)" data-ng-repeat="d in w" data-ng-init="dayIndex = $index">
-            <div class="uk-panel uk-panel-box uk-panel-hover">
-               <div class="calendar-number" ng-class="{'calendar-different-month-day':d.differentMonth}">{{d.number}}</div>
-               <div data-ng-style="getStyle(e.style)" data-ng-click="selectEvent(e.original)" class="calendar-event {{e.className}}" data-ng-class="{'multiday': e.numDays>1 && dayIndex!=6}" data-ng-repeat="e in d.events | orderBy: ['-numDays','content']">
-                   <span style="max-width: calc(100%*{{getDaysRemaining(e.numDays, dayIndex)}} - 10px)" data-ng-if="e.firstDay || dayIndex==0">{{e.content}}</span>
+    <div class="uk-width-1-1 calendar-nav">
+        <a href="" class="uk-icon-hover uk-icon-chevron-left" ng-click="addMonth(-1)"></a>
+        <div class="uk-form-select" data-uk-form-select="{target:'a'}">
+            <a>{{selection.month | date: 'MMMM'}}</a>
+            <select ng-model="selection.month" ng-change="changeDate()" ng-options="val as val|date:'MMMM' for (key, val) in months">
+            </select>
+        </div>
+        <div class="uk-form-select" data-uk-form-select="{target:'a'}">
+            <a>{{selection.year}}</a>
+            <select ng-model="selection.year" ng-change="changeDate()">
+                <option data-ng-repeat="y in years | orderBy">{{y}}</option>
+            </select>
+        </div>
+        <a href="" class="uk-icon-hover uk-icon-chevron-right" ng-click="addMonth(1)"></a>
+    </div>
+    <div class="uk-width-1-1 calendar-header">
+        <div class="uk-grid uk-grid-collapse calendar-header">
+            <div class="uk-width calendar-header-day" style="width: calc(100%/7)" data-ng-repeat="(key, val) in days">
+                <div class="uk-panel uk-panel-box">
+                    <h3 class="uk-panel-title">{{val|date:'EEE'}}</h3>
                 </div>
             </div>
-         </div>
-      </div>
-      <!--<div data-ng-repeat-end class="uk-block calendar-day-detail" ng-if="hasDaySelected(w)">-->
-      <!--Dettaglio-->
-      <!--</div>-->
-   </div>
+        </div>
+    </div>
+    <div class="uk-width-1-1 calendar-body">
+        <div ng-show="loading" class="loader">
+            <i class="uk-icon-spinner uk-icon-spin uk-icon-large uk-text-muted"></i>
+        </div>
+        <div ng-hide="loading" class="uk-grid uk-grid-collapse" data-ng-repeat="w in month.weeks" data-uk-grid-match="{target:'.uk-panel'}">
+            <div class="uk-width calendar-day" style="width: calc(100%/7)" data-ng-repeat="d in w" data-ng-init="dayIndex = $index">
+                <div class="uk-panel uk-panel-box uk-panel-hover">
+                    <div class="calendar-number" ng-class="{'calendar-different-month-day':d.differentMonth}">{{d.number}}</div>
+                    <div data-ng-style="e.style" data-ng-click="selectEvent(e.original)" class="calendar-event {{e.className}}" data-ng-class="{'multiday': e.numDays>1 && dayIndex!=6}" data-ng-repeat="e in d.events | orderBy: ['-numDays','content']">
+                        <span style="max-width: calc(100%*{{getDaysRemaining(e.numDays, dayIndex)}} - 10px)" data-ng-if="e.firstDay || dayIndex==0">{{e.content}}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>

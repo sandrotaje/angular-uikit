@@ -24,6 +24,17 @@ $color-primary-contrast: white !default;
       background: #d6d6d6;
     }
 
+    .loader {
+      min-height: 642px;
+      background-color: #e2e2e2;
+      width: 100%;
+      position: relative;
+      .uk-icon-spin {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+      }
+    }
     .calendar-day {
       border: 1px solid #e2e2e2;
       .calendar-different-month-day {
@@ -42,26 +53,26 @@ $color-primary-contrast: white !default;
         }
       }
       .calendar-event {
-          &.multiday{
-            width: 100%;
-          }
-          width: calc(100% - 5px);
-          height: 8px;
-          line-height: 8px;
-          font-size: 11px;
-          background: $color-primary;
-          color: $color-primary-contrast;
-          padding: 3px 0 3px 5px;
-          margin-bottom: 3px;
-          cursor: pointer;
+        &.multiday {
+          width: 100%;
+        }
+        width: calc(100% - 5px);
+        height: 8px;
+        line-height: 8px;
+        font-size: 11px;
+        background: $color-primary;
+        color: $color-primary-contrast;
+        padding: 3px 0 3px 5px;
+        margin-bottom: 3px;
+        cursor: pointer;
       }
-      span{
-          position: relative;
-          float: left;
-          z-index: 1;
-          white-space: nowrap;
-          overflow: hidden;
-          text-overflow: ellipsis;
+      span {
+        position: relative;
+        float: left;
+        z-index: 1;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
       }
     }
   }

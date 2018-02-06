@@ -201,16 +201,16 @@
 
                 vm.onEventSelected = function (e) {
                     console.log(e);
-                }
+                };
 
                 vm.getEventsByDate = function (startDate, endDate) {
-                    console.log(startDate, endDate);
+                    //console.log(startDate, endDate);
                     return $q(function (resolve) {
                         $timeout(function () {
                             resolve([{
                                 id: 1,
-                                startDate: 1486166400000,
-                                endDate: 1486512000000,
+                                startDate: 1517843851399,
+                                endDate: 1517843851399,
                                 content: "wefwef della cinghiwefwefawef e tes nome molto lungo",
                                 style: {
                                     color: "red",
@@ -218,19 +218,19 @@
                                 }
                             }, {
                                 id: 2,
-                                startDate: new Date(1486252800000),
-                                endDate: new Date(1486425600000),
+                                startDate: new Date(1517353200000),
+                                endDate: new Date(1517843851399),
                                 content: "Sostituire filtro",
                                 className: "alert-class"
                             }, {
                                 id: 3,
-                                startDate: new Date(1486252800000),
-                                endDate: new Date(1486512000000),
+                                startDate: new Date(1517843851399),
+                                endDate: new Date(1517843851399),
                                 content: "Sostituire blblawefwefwefw wefwefwe wefwef wef wef"
                             }, {
                                 id: 4,
-                                startDate: new Date(1486425600000),
-                                endDate: new Date(1486425600000),
+                                startDate: new Date(1517843851399),
+                                endDate: new Date(1517843851399),
                                 content: "Cambio della cinghia e tes nome molto lungo"
                             }]);
                         }, 200);

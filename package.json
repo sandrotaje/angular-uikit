@@ -1,6 +1,6 @@
 {
   "name": "angular-uikit",
-  "version": "1.3.12",
+  "version": "1.3.13",
   "description": "Angular Uikit binding",
   "main": "./dist/angular-uikit.min.js",
   "scripts": {
