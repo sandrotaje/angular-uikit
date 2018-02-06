@@ -1,12 +1,12 @@
 <div class="uk-grid uk-grid-collapse calendar">
     <div class="uk-width-1-1 calendar-nav">
         <a href="" class="uk-icon-hover uk-icon-chevron-left" ng-click="addMonth(-1)"></a>
-        <div class="uk-form-select" data-uk-form-select="{target:'a'}">
+        <div class="uk-form-select">
             <a>{{selection.month | date: 'MMMM'}}</a>
             <select ng-model="selection.month" ng-change="changeDate()" ng-options="val as val|date:'MMMM' for (key, val) in months">
             </select>
         </div>
-        <div class="uk-form-select" data-uk-form-select="{target:'a'}">
+        <div class="uk-form-select">
             <a>{{selection.year}}</a>
             <select ng-model="selection.year" ng-change="changeDate()">
                 <option data-ng-repeat="y in years | orderBy">{{y}}</option>
