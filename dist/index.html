@@ -2,12 +2,12 @@
 
 <head>
     <title>Angular UIkit showcase</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/uikit/2.27.2/css/uikit.min.css"/>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/uikit/2.27.2/css/components/autocomplete.min.css"/>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/uikit/2.27.2/css/components/form-select.min.css"/>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/uikit/2.27.2/css/components/sortable.min.css"/>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/uikit/2.27.2/css/components/form-advanced.min.css"/>
-    <link rel="stylesheet" href="angular-uikit.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/uikit/2.27.2/css/uikit.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/uikit/2.27.2/css/components/autocomplete.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/uikit/2.27.2/css/components/form-select.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/uikit/2.27.2/css/components/sortable.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/uikit/2.27.2/css/components/form-advanced.min.css" />
+    <link rel="stylesheet" href="angular-uikit.min.css" />
 
     <style>
         .alert-class {
@@ -20,51 +20,53 @@
 <body data-ng-controller="MainController as vm">
 
 
-<article class="uk-article">
-    <h1 class="uk-article-title">Autocomplete</h1>
-    <input data-uk-ng-autocomplete data-ng-model="vm.selected" data-uk-on-select="vm.autocompOnSelect($selectedItem)" data-uk-label="'userId'" data-uk-source-path="'https://jsonplaceholder.typicode.com/posts'">
-    <button class="uk-button" data-ng-click="vm.source = [{id:1, pippo:'test1'},{id:43, pippo:'asdasd'},{id:42, pippo:'asdasd'}];">Change source</button>
-    Selected item: {{vm.selected}}
+    <article class="uk-article">
+        <h1 class="uk-article-title">Autocomplete</h1>
+        <input data-uk-ng-autocomplete data-ng-model="vm.selected" data-uk-on-select="vm.autocompOnSelect($selectedItem)" data-uk-label="'userId'"
+            data-uk-source-path="'https://jsonplaceholder.typicode.com/posts'">
+        <button class="uk-button" data-ng-click="vm.source = [{id:1, pippo:'test1'},{id:43, pippo:'asdasd'},{id:42, pippo:'asdasd'}];">Change source</button>
+        Selected item: {{vm.selected}}
 
-</article>
+    </article>
 
-<article class="uk-article">
-    <h1 class="uk-article-title">Calendar</h1>
-    <uk-ng-calendar data-get-events-by-date="vm.getEventsByDate($startDate, $endDate)" data-on-event-selected="vm.onEventSelected($event)"></uk-ng-calendar>
-</article>
+    <article class="uk-article">
+        <h1 class="uk-article-title">Calendar</h1>
+        <uk-ng-calendar data-get-events-by-date="vm.getEventsByDate($startDate, $endDate)" data-on-event-selected="vm.onEventSelected($event)"></uk-ng-calendar>
+    </article>
 
-<article class="uk-article">
-    <h1 class="uk-article-title">Sortable</h1>
-    <div class="uk-grid uk-grid-match uk-sortable" data-uk-ng-sortable="{handleClass: 'uk-sortable-handle'}">
-        <div data-id="{{$index}}" data-uk-ng-sortable-item="p" data-ng-repeat="p in vm.sortList | orderBy: 'order'" data-uk-grid-margin>
-            <i data-ng-if="!conf.readonly" class="uk-icon-bars uk-text-success uk-sortable-handle"></i>Ciao
+    <article class="uk-article">
+        <h1 class="uk-article-title">Sortable</h1>
+        <div class="uk-grid uk-grid-match uk-sortable" data-uk-ng-sortable="{handleClass: 'uk-sortable-handle'}">
+            <div data-id="{{$index}}" data-uk-ng-sortable-item="p" data-ng-repeat="p in vm.sortList | orderBy: 'order'" data-uk-grid-margin>
+                <i data-ng-if="!conf.readonly" class="uk-icon-bars uk-text-success uk-sortable-handle"></i>Ciao
+            </div>
         </div>
-    </div>
-</article>
+    </article>
 
-<article class="uk-article">
-    <h1 class="uk-article-title">JSON Table Form</h1>
-    <uk-ng-json-table-form model="vm.jsonTableModel" structure="vm.structure" can-reorder="true" submit-on-enter="true" read-only="true"></uk-ng-json-table-form>
-    {{vm.jsonTableModel | json}}
-</article>
+    <article class="uk-article">
+        <h1 class="uk-article-title">JSON Table Form</h1>
+        <uk-ng-json-table-form model="vm.jsonTableModel" structure="vm.structure" can-reorder="true" submit-on-enter="true" read-only="true"></uk-ng-json-table-form>
 
-<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.6/angular.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/2.27.2/js/uikit.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/2.27.2/js/components/autocomplete.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/2.27.2/js/components/sortable.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/2.27.2/js/components/accordion.min.js"></script>
+        {{vm.jsonTableModel | json}}
+    </article>
 
-<script src="angular-uikit.min.js"></script>
-<script>
-    angular.module('angularUIkitShowcase', ['angularUikit'])
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.6/angular.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/2.27.2/js/uikit.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/2.27.2/js/components/autocomplete.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/2.27.2/js/components/sortable.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/2.27.2/js/components/accordion.min.js"></script>
+
+    <script src="angular-uikit.min.js"></script>
+    <script>
+        angular.module('angularUIkitShowcase', ['angularUikit'])
             .controller('MainController', function ($q, $timeout) {
                 var vm = this;
 
-                vm.selected = {"userId":2,"id":12,"title":"in quibusdam tempore odit est dolorem","body":"itaque id aut magnam\npraesentium quia et ea odit et ea voluptas et\nsapiente quia nihil amet occaecati quia id voluptatem\nincidunt ea est distinctio odio"};
+                vm.selected = { "userId": 2, "id": 12, "title": "in quibusdam tempore odit est dolorem", "body": "itaque id aut magnam\npraesentium quia et ea odit et ea voluptas et\nsapiente quia nihil amet occaecati quia id voluptatem\nincidunt ea est distinctio odio" };
                 //vm.source = ['test1', 'test2', 'test3'];
 
-                vm.source = [{id:1, pippo:'test1'},{id:56, pippo:'test2'},{id:123, pippo:'test3'}];
+                vm.source = [{ id: 1, pippo: 'test1' }, { id: 56, pippo: 'test2' }, { id: 123, pippo: 'test3' }];
 
 
                 vm.sortList = [{
@@ -95,8 +97,8 @@
                         label: "Units"
                     },
                     priority: 1,
-                    processRecipeProducts:[
-                        {dosage: "asdas"}
+                    processRecipeProducts: [
+                        { dosage: "asdas" }
                     ]
                 }, {
                     name: "ciao3",
@@ -115,13 +117,13 @@
                         "label": "Image",
                         "property": "thumbnail",
                         "type": "image",
-                        "image":{
-                            "interpolate":{
-                                "base":"https://getuikit.com/v2/docs/images/placeholder_DIMENSIONE.svg",
-                                "value":"DIMENSIONE"
+                        "image": {
+                            "interpolate": {
+                                "base": "https://getuikit.com/v2/docs/images/placeholder_DIMENSIONE.svg",
+                                "value": "DIMENSIONE"
                             },
-                            "maxWidth":"100",
-                            "maxHeight":"100"
+                            "maxWidth": "100",
+                            "maxHeight": "100"
                         }
                     },
                     {
@@ -129,7 +131,7 @@
                         "label": "sequence",
                         "property": "sequence",
                         "type": "sequence"
-                    },{
+                    }, {
                         "label": "Name",
                         "property": "name",
                         "type": "text",
@@ -238,7 +240,7 @@
                 };
 
             })
-</script>
+    </script>
 
 
 </body>
