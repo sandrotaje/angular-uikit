@@ -16,35 +16,23 @@ angular.module('angularUikit', [])
     .directive('ukNgSortable', ukNgSortable)
     .directive('ukNgNotAllowArrayDuplicate', ukNgNotAllowArrayDuplicate)
     .directive('hxSubmitOnEnter', hxSubmitOnEnter)
-    .directive('isolateForm', [function () {
+    .directive('isolateForm', function() {
         return {
-            restrict: 'A',
-            require: '?form',
-            link: function (scope, elm, attrs, ctrl) {
-                if (!ctrl) {
-                    return;
-                }
-
-                // Do a copy of the controller
-                var ctrlCopy = {};
-                angular.copy(ctrl, ctrlCopy);
-
-                // Get the parent of the form
-                var parent = elm.parent().controller('form');
-                // Remove parent link to the controller
-                parent.$removeControl(ctrl);
-
-                // Replace form controller with a "isolated form"
-                ctrl.$setValidity = function (validationToken, isValid, control) {
-                    ctrlCopy.$setValidity(validationToken, isValid, control);
-                    parent.$setValidity(validationToken, true, ctrl);
-                };
-                ctrl.$setDirty = function () {
-                    elm.removeClass('ng-pristine').addClass('ng-dirty');
-                    ctrl.$dirty = true;
-                    ctrl.$pristine = false;
-                };
+          restrict: 'A',
+          require: '?form',
+          link: function(scope, element, attrs, formController) {
+            if (!formController) {
+              return;
             }
+      
+            var parentForm = formController.$$parentForm; // Note this uses private API
+            if (!parentForm) {
+              return;
+            }
+      
+            // Remove this form from parent controller
+            parentForm.$removeControl(formController);
+          }
         };
-    }]);
+      });
 ;
