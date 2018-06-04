@@ -45,9 +45,13 @@
 
     <article class="uk-article">
         <h1 class="uk-article-title">JSON Table Form</h1>
-        <uk-ng-json-table-form model="vm.jsonTableModel" structure="vm.structure" can-reorder="true" submit-on-enter="true" read-only="true"></uk-ng-json-table-form>
+        <form name="form" ng-submit="save(mt.machineType)">
+            <uk-ng-json-table-form model="vm.jsonTableModel" structure="vm.structure" can-reorder="true" submit-on-enter="true" read-only="false"></uk-ng-json-table-form>
+            {{form.$valid}}
+        </form>
+        
 
-        {{vm.jsonTableModel | json}}
+        <!-- {{vm.jsonTableModel | json}} -->
     </article>
 
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.6/angular.min.js"></script>
