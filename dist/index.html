@@ -46,8 +46,12 @@
     <article class="uk-article">
         <h1 class="uk-article-title">JSON Table Form</h1>
         <form name="form" ng-submit="save(mt.machineType)">
-            <uk-ng-json-table-form model="vm.jsonTableModel" structure="vm.structure" can-reorder="true" submit-on-enter="true" read-only="false"></uk-ng-json-table-form>
-            {{form.$valid}}
+            <uk-ng-json-table-form model="vm.jsonTableModel" structure="vm.structure" can-reorder="true" submit-on-enter="true" read-only="false">
+                <custom-template>
+                    ciao
+                    {{m[s.property]}}
+                </custom-template>
+            </uk-ng-json-table-form>
         </form>
         
 
@@ -90,7 +94,8 @@
                         id: 1,
                         label: "Units"
                     },
-                    priority: 1
+                    priority: 1,
+                    template: "TEMPLATEEE"
                 }, {
                     name: "ciao2",
                     keyValueObject: 1,
@@ -117,6 +122,11 @@
                 }];
 
                 vm.structure = [
+                    {
+                        "type": "template",
+                        "label": "template",
+                        "property": "template"
+                    },
                     {
                         "label": "Image",
                         "property": "thumbnail",

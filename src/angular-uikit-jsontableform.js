@@ -18,13 +18,23 @@ export default function ukNgJsonTableForm($compile, $timeout) {
             compact: "=?",
             oddIteration: "=?"
         },
-        templateUrl: function (elm, attrs) {
-            return !attrs.compact || attrs.compact==='false' ? templateUrl : compactTemplateUrl
+        transclude: {
+            template: "?customTemplate"
         },
-        link: function (scope, element, attrs) {
+        templateUrl: function (elm, attrs) {
+            return !attrs.compact || attrs.compact === 'false' ? templateUrl : compactTemplateUrl
+        },
+        link: function (scope, element, attrs, ctrl, $transcludeFn) {
+
+
+            scope.transcludeTemplate = function (element) {
+                $transcludeFn(element.scope(), function (clone) {
+                    element.append(clone);
+                }, null, 'template')
+            }
 
             if (scope.compact) {
-                if(scope.oddIteration==undefined)
+                if (scope.oddIteration == undefined)
                     scope.oddIteration = false;
                 scope.arraysStructure = [];
                 scope.valuesStructure = [];
@@ -54,7 +64,7 @@ export default function ukNgJsonTableForm($compile, $timeout) {
                     });
                 });
             };
-            
+
             scope.getHeaders = function (struct) {
                 var firstRow = [];
                 var secondRow = [];
@@ -68,7 +78,7 @@ export default function ukNgJsonTableForm($compile, $timeout) {
                     arr.forEach(function (s) {
                         if (s.type != 'array') {
                             if (first) {
-                                firstRow.push({colspan: 1});
+                                firstRow.push({ colspan: 1 });
                             }
                             secondRow.push(s);
                         } else {
@@ -85,7 +95,7 @@ export default function ukNgJsonTableForm($compile, $timeout) {
                     });
                 };
                 recur(struct);
-                return {firstRow: firstRow, secondRow: secondRow};
+                return { firstRow: firstRow, secondRow: secondRow };
             };
 
             scope.objectify = function (el) {

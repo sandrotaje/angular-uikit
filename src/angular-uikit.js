@@ -8,31 +8,41 @@ import ukNgNotAllowArrayDuplicate from './angular-uikit-notallowarrayduplicate';
 import hxSubmitOnEnter from './angular-uikit-hx-submit-on-enter';
 
 angular.module('angularUikit', [])
-    .directive('ukNgAutocomplete', ukNgAutocomplete)
-    .directive('ukNgPagination', ukNgPagination)
-    .directive('ukNgJsonTableForm', ukNgJsonTableForm)
-    .directive('ukNgCalendar', ukNgCalendar)
-    .directive('ukNgSortableItem', ukNgSortableItem)
-    .directive('ukNgSortable', ukNgSortable)
-    .directive('ukNgNotAllowArrayDuplicate', ukNgNotAllowArrayDuplicate)
-    .directive('hxSubmitOnEnter', hxSubmitOnEnter)
-    .directive('isolateForm', function() {
-        return {
-          restrict: 'A',
-          require: '?form',
-          link: function(scope, element, attrs, formController) {
-            if (!formController) {
-              return;
-            }
-      
-            var parentForm = formController.$$parentForm; // Note this uses private API
-            if (!parentForm) {
-              return;
-            }
-      
-            // Remove this form from parent controller
-            parentForm.$removeControl(formController);
-          }
-        };
-      });
+  .directive('ukNgAutocomplete', ukNgAutocomplete)
+  .directive('ukNgPagination', ukNgPagination)
+  .directive('ukNgJsonTableForm', ukNgJsonTableForm)
+  .directive('ukNgCalendar', ukNgCalendar)
+  .directive('ukNgSortableItem', ukNgSortableItem)
+  .directive('ukNgSortable', ukNgSortable)
+  .directive('ukNgNotAllowArrayDuplicate', ukNgNotAllowArrayDuplicate)
+  .directive('hxSubmitOnEnter', hxSubmitOnEnter)
+  .directive('isolateForm', function () {
+    return {
+      restrict: 'A',
+      require: '?form',
+      link: function (scope, element, attrs, formController) {
+        if (!formController) {
+          return;
+        }
+
+        var parentForm = formController.$$parentForm; // Note this uses private API
+        if (!parentForm) {
+          return;
+        }
+
+        // Remove this form from parent controller
+        parentForm.$removeControl(formController);
+      }
+    };
+  })
+  .directive('myNgInit', function () {
+    return {
+      scope: {
+        myNgInit: '&'
+      },
+      link: function (scope, element, attributes) {
+        scope.myNgInit()(element);
+      }
+    };
+  });;
 ;
