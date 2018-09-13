@@ -35,13 +35,19 @@ angular.module('angularUikit', [])
       }
     };
   })
-  .directive('myNgInit', function () {
+  .directive('myNgInit', function ($rootScope) {
     return {
       scope: {
-        myNgInit: '&'
+        myNgInit: '&',
+        m: "=",
+        s: "="
       },
       link: function (scope, element, attributes) {
-        scope.myNgInit()(element);
+        var scp = $rootScope.$new(true);
+        scp.m = scope.m;
+        scp.s = scope.s;
+
+        scope.myNgInit()(scp, element);
       }
     };
   });;

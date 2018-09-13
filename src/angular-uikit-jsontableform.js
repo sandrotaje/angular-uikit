@@ -19,7 +19,8 @@ export default function ukNgJsonTableForm($compile, $timeout) {
             oddIteration: "=?"
         },
         transclude: {
-            template: "?customTemplate"
+            template: "?customTemplate",
+            insertTemplate: "?customInsertTemplate"
         },
         templateUrl: function (elm, attrs) {
             return !attrs.compact || attrs.compact === 'false' ? templateUrl : compactTemplateUrl
@@ -27,10 +28,16 @@ export default function ukNgJsonTableForm($compile, $timeout) {
         link: function (scope, element, attrs, ctrl, $transcludeFn) {
 
 
-            scope.transcludeTemplate = function (element) {
-                $transcludeFn(element.scope(), function (clone) {
-                    element.append(clone);
+            scope.transcludeTemplate = function (scp, elm) {
+                $transcludeFn(scp, function (clone) {
+                    elm.append(clone);
                 }, null, 'template')
+            }
+
+            scope.transcludeInsertTemplate = function (scp, elm) {
+                $transcludeFn(scp, function (clone) {
+                    elm.append(clone);
+                }, null, 'insertTemplate')
             }
 
             if (scope.compact) {

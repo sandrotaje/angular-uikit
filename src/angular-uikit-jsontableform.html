@@ -139,7 +139,7 @@
                             </div>
                         </div>
 
-                        <div ng-switch-when="template" my-ng-init="transcludeTemplate"></div>
+                        <div ng-switch-when="template" my-ng-init="transcludeTemplate" m="m" s="s"></div>
 
                         <!-- DEFAULT -->
 
@@ -223,6 +223,8 @@
                                data-ng-min="{{h.number.min}}"
                                ng-required="h.required"
                                title="{{h.property}}">
+
+                        <div ng-switch-when="template" my-ng-init="transcludeInsertTemplate" m="newItem" s="h"></div>
 
                         <!-- DEFAULT -->
                         <input name="{{h.property}}"
