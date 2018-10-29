@@ -55,7 +55,7 @@
                 </custom-insert-template>
             </uk-ng-json-table-form>
         </form>
-        
+
 
         <!-- {{vm.jsonTableModel | json}} -->
     </article>
@@ -76,7 +76,7 @@
                 vm.selected = { "userId": 2, "id": 12, "title": "in quibusdam tempore odit est dolorem", "body": "itaque id aut magnam\npraesentium quia et ea odit et ea voluptas et\nsapiente quia nihil amet occaecati quia id voluptatem\nincidunt ea est distinctio odio" };
                 //vm.source = ['test1', 'test2', 'test3'];
 
-                vm.source = [{ id: 1, pippo: 'test1' }, { id: 56, pippo: 'test2' }, { id: 123, pippo: 'test3' }];
+                vm.source = [{ id: 1, pippo: 'test1', value: 'primo' }, { id: 56, pippo: 'test2', value: 'secondo' }, { id: 123, pippo: 'test3', value: 'terzo' }];
 
 
                 vm.sortList = [{
@@ -87,7 +87,7 @@
                     content: "Test2"
                 }];
 
-/*
+
                 vm.jsonTableModel = [{
                     name: "ciao1",
                     thumbnail: "200x100",
@@ -150,11 +150,22 @@
                         "label": "sequence",
                         "property": "sequence",
                         "type": "sequence"
-                    }, {
+                    },
+                    {
                         "label": "Name",
                         "property": "name",
                         "type": "text",
                         "required": true
+                    },
+                    {
+                        "label": "Fratello",
+                        "property": "fratello",
+                        "type": "text",
+                        "required": true,
+                        "default": (parent, newItem)=>{
+                            console.log(parent, newItem);
+                            return newItem.autocomplete?newItem.autocomplete.value:null
+                        }
                     },
                     {
                         "label": "keyValueObject",
@@ -173,6 +184,16 @@
                         "type": "select",
                         "select": {
                             "options": ["Units", "Millions"]
+                        }
+                    },
+                    {
+                        "label": "Autocomplete",
+                        "property": "autocomplete",
+                        "type": "autocomplete",
+                        "required": true,
+                        "autocomplete": {
+                            "source": vm.source,
+                            "label": "pippo"
                         }
                     },
                     {
@@ -210,14 +231,17 @@
                                 "label": "asd",
                                 "required": true,
                                 "property": "dosage",
-                                "type": "text"
+                                "type": "text",
+                                "default": function(parent, newItem){
+                                    return parent&&parent.autocomplete?parent.autocomplete.value:null;
+                                }
                             }
                         ]
                     }
-                ];*/
+                ];
 
-                vm.jsonTableModel = [{"id":144,"code":"edgeLimMIn","description":"-","level":1},{"id":129,"code":"poserrAsp","description":"-","level":1},{"id":134,"code":"toPosAsp","description":"-","level":1},{"id":156,"code":"warnConvColl","description":"-","level":1},{"id":128,"code":"poserrTall","description":"-","level":1},{"id":148,"code":"washerNotInCycle","description":"-","level":1},{"id":153,"code":"maxAsp1pass","description":"-","level":1},{"id":126,"code":"poserrSpess","description":"-","level":1},{"id":117,"code":"outOfLimSmu","description":"-","level":1},{"id":123,"code":"convFault","description":"-","level":1},{"id":125,"code":"spazFault","description":"-","level":1},{"id":146,"code":"aspLimMin","description":"-","level":1},{"id":145,"code":"aspLimMax","description":"-","level":1},{"id":115,"code":"outOfLimTall","description":"-","level":1},{"id":124,"code":"braConvFault","description":"-","level":1},{"id":122,"code":"pumpsFault","description":"-","level":1},{"id":127,"code":"poserrAng","description":"-","level":1},{"id":131,"code":"toPosSpess","description":"-","level":1},{"id":114,"code":"outOfLimAng","description":"Angle out of limit","level":1},{"id":142,"code":"thickLimMin","description":"-","level":1},{"id":143,"code":"edgeLimMax","description":"-","level":1},{"id":113,"code":"outOfLimSpess","description":"Thickness out of limit","level":1},{"id":149,"code":"lineGlassStopped","description":"-","level":1},{"id":154,"code":"glassConvColl","description":"-","level":1},{"id":109,"code":"oilLowLevel","description":"Low oil level","level":1},{"id":132,"code":"toPosAng","description":"-","level":1},{"id":135,"code":"toPosSpessWash","description":"-","level":1},{"id":151,"code":"dataErr","description":"-","level":1},{"id":119,"code":"airPressLow","description":"-","level":1},{"id":133,"code":"toPosTall","description":"-","level":1},{"id":121,"code":"fanConvFault","description":"-","level":1},{"id":118,"code":"thermalFault","description":"-","level":1},{"id":136,"code":"convManCycle","description":"-","level":1},{"id":141,"code":"thickLimMax","description":"-","level":1},{"id":147,"code":"glassPresAsp","description":"-","level":1},{"id":111,"code":"driveConvFault","description":"Conveyor drive fault","level":1},{"id":138,"code":"washerAlm","description":"-","level":1},{"id":140,"code":"angleLimMIn","description":"-","level":1},{"id":120,"code":"emergency","description":"-","level":1},{"id":139,"code":"angleLimMax","description":"-","level":1},{"id":137,"code":"glassLarge","description":"-","level":1},{"id":116,"code":"outOfLimAsp","description":"-","level":1},{"id":110,"code":"oilPressure","description":"Low oil pressure","level":1},{"id":130,"code":"poserrWash","description":"-","level":1},{"id":152,"code":"axisNotInPos","description":"-","level":1},{"id":112,"code":"oilConvStop","description":"Oil conveyer stop","level":1},{"id":150,"code":"dataNotCompl","description":"-","level":1},{"id":155,"code":"washtooClose","description":"-","level":1}];
-                vm.structure = [{"label":"Code","property":"code","type":"text","required":true},{"label":"Description","property":"description","type":"template"},{"label":"Level","property":"level","type":"number","min":0,"required":true}];
+                //vm.jsonTableModel = [{"id":144,"code":"edgeLimMIn","description":"-","level":1},{"id":129,"code":"poserrAsp","description":"-","level":1},{"id":134,"code":"toPosAsp","description":"-","level":1},{"id":156,"code":"warnConvColl","description":"-","level":1},{"id":128,"code":"poserrTall","description":"-","level":1},{"id":148,"code":"washerNotInCycle","description":"-","level":1},{"id":153,"code":"maxAsp1pass","description":"-","level":1},{"id":126,"code":"poserrSpess","description":"-","level":1},{"id":117,"code":"outOfLimSmu","description":"-","level":1},{"id":123,"code":"convFault","description":"-","level":1},{"id":125,"code":"spazFault","description":"-","level":1},{"id":146,"code":"aspLimMin","description":"-","level":1},{"id":145,"code":"aspLimMax","description":"-","level":1},{"id":115,"code":"outOfLimTall","description":"-","level":1},{"id":124,"code":"braConvFault","description":"-","level":1},{"id":122,"code":"pumpsFault","description":"-","level":1},{"id":127,"code":"poserrAng","description":"-","level":1},{"id":131,"code":"toPosSpess","description":"-","level":1},{"id":114,"code":"outOfLimAng","description":"Angle out of limit","level":1},{"id":142,"code":"thickLimMin","description":"-","level":1},{"id":143,"code":"edgeLimMax","description":"-","level":1},{"id":113,"code":"outOfLimSpess","description":"Thickness out of limit","level":1},{"id":149,"code":"lineGlassStopped","description":"-","level":1},{"id":154,"code":"glassConvColl","description":"-","level":1},{"id":109,"code":"oilLowLevel","description":"Low oil level","level":1},{"id":132,"code":"toPosAng","description":"-","level":1},{"id":135,"code":"toPosSpessWash","description":"-","level":1},{"id":151,"code":"dataErr","description":"-","level":1},{"id":119,"code":"airPressLow","description":"-","level":1},{"id":133,"code":"toPosTall","description":"-","level":1},{"id":121,"code":"fanConvFault","description":"-","level":1},{"id":118,"code":"thermalFault","description":"-","level":1},{"id":136,"code":"convManCycle","description":"-","level":1},{"id":141,"code":"thickLimMax","description":"-","level":1},{"id":147,"code":"glassPresAsp","description":"-","level":1},{"id":111,"code":"driveConvFault","description":"Conveyor drive fault","level":1},{"id":138,"code":"washerAlm","description":"-","level":1},{"id":140,"code":"angleLimMIn","description":"-","level":1},{"id":120,"code":"emergency","description":"-","level":1},{"id":139,"code":"angleLimMax","description":"-","level":1},{"id":137,"code":"glassLarge","description":"-","level":1},{"id":116,"code":"outOfLimAsp","description":"-","level":1},{"id":110,"code":"oilPressure","description":"Low oil pressure","level":1},{"id":130,"code":"poserrWash","description":"-","level":1},{"id":152,"code":"axisNotInPos","description":"-","level":1},{"id":112,"code":"oilConvStop","description":"Oil conveyer stop","level":1},{"id":150,"code":"dataNotCompl","description":"-","level":1},{"id":155,"code":"washtooClose","description":"-","level":1}];
+                //vm.structure = [{"label":"Code","property":"code","type":"text","required":true},{"label":"Description","property":"description","type":"template"},{"label":"Level","property":"level","type":"number","min":0,"required":true}];
 
                 vm.autocompOnSelect = function (item) {
                     console.log(item);

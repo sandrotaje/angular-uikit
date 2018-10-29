@@ -9,6 +9,7 @@ export default function ukNgJsonTableForm($compile, $timeout) {
         scope: {
             model: "=",
             structure: "=",
+            parent: "=",
             readOnly: "=?",
             canReorder: "=?",
             allHeaderInHead: "=?",
@@ -32,13 +33,14 @@ export default function ukNgJsonTableForm($compile, $timeout) {
                 $transcludeFn(scp, function (clone) {
                     elm.append(clone);
                 }, null, 'template')
-            }
+            };
 
             scope.transcludeInsertTemplate = function (scp, elm) {
                 $transcludeFn(scp, function (clone) {
                     elm.append(clone);
                 }, null, 'insertTemplate')
-            }
+            };
+
 
             if (scope.compact) {
                 if (scope.oddIteration == undefined)
@@ -64,6 +66,15 @@ export default function ukNgJsonTableForm($compile, $timeout) {
                 scope.newItem = {};
             };
 
+            
+            scope.$watch('newItem', function () {
+                for(let h of scope.structure){
+                    if(h.default && scope.newItem && !scope.newItem[h.property]){
+                        scope.newItem[h.property] = typeof h.default === "function"?h.default(scope.parent, scope.newItem):h.default;
+                    }
+                }
+            }, true);
+
             scope.removeItem = function removeItem(index) {
                 UIkit.modal.confirm(scope.deleteConfirmLabel || "Are you sure?", function () {
                     $timeout(function () {
@@ -77,13 +88,13 @@ export default function ukNgJsonTableForm($compile, $timeout) {
                 var secondRow = [];
                 var countNotArray = function (array) {
                     return array.filter(function (el) {
-                        return el.type != 'array';
+                        return el.type !== 'array';
                     }).length;
                 };
                 var first = true;
                 var recur = function (arr) {
                     arr.forEach(function (s) {
-                        if (s.type != 'array') {
+                        if (s.type !== 'array') {
                             if (first) {
                                 firstRow.push({ colspan: 1 });
                             }

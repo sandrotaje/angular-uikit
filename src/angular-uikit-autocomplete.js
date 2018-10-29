@@ -37,7 +37,6 @@ export default function ukNgAutocomplete($http, $timeout) {
                 return autocompleteRenderedObjects;
             }
 
-            
             function callback(release) {
                 let search = {};
                 search[scope.ukLabel ? scope.ukLabel : "search"] = ngModel.$viewValue;
@@ -57,7 +56,7 @@ export default function ukNgAutocomplete($http, $timeout) {
             }
 
             ngModel.$formatters = [(function (value) {
-                let realValue = scope.ukLabel ? value[scope.ukLabel] : value;
+                let realValue = value && scope.ukLabel ? value[scope.ukLabel] : value;
 
                 if (!angular.isArray(source) || source.some(e=>realValue == e.value))
                     return realValue;
