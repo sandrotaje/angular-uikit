@@ -46,7 +46,7 @@
     <article class="uk-article">
         <h1 class="uk-article-title">JSON Table Form</h1>
         <form name="form" ng-submit="save(mt.machineType)">
-            <uk-ng-json-table-form model="vm.jsonTableModel" structure="vm.structure" can-reorder="true" submit-on-enter="true" read-only="false">
+            <uk-ng-json-table-form model="vm.jsonTableModel" structure="vm.structure" compact="true" can-reorder="true" submit-on-enter="true" read-only="false">
                 <custom-template>
                     {{m[s.property]}}
                 </custom-template>
@@ -76,7 +76,7 @@
                 vm.selected = { "userId": 2, "id": 12, "title": "in quibusdam tempore odit est dolorem", "body": "itaque id aut magnam\npraesentium quia et ea odit et ea voluptas et\nsapiente quia nihil amet occaecati quia id voluptatem\nincidunt ea est distinctio odio" };
                 //vm.source = ['test1', 'test2', 'test3'];
 
-                vm.source = [{ id: 1, pippo: 'test1', value: 'primo' }, { id: 56, pippo: 'test2', value: 'secondo' }, { id: 123, pippo: 'test3', value: 'terzo' }];
+                vm.source = [{ id: 1, pippo: 'test1', value: 4 }, { id: 56, pippo: 'test2', value: 'secondo' }, { id: 123, pippo: 'test3', value: 'terzo' }];
 
 
                 vm.sortList = [{
@@ -159,12 +159,17 @@
                     },
                     {
                         "label": "Fratello",
-                        "property": "fratello",
-                        "type": "text",
+                        "type": "ratio",
                         "required": true,
-                        "default": (parent, newItem)=>{
-                            console.log(parent, newItem);
-                            return newItem.autocomplete?newItem.autocomplete.value:null
+                        "first":{
+                            "property": "firstValue",
+                            "default": (parent, newItem)=>{
+                                return newItem.autocomplete?newItem.autocomplete.value:null
+                            }
+                        },
+                        "second":{
+                            "property": "secondValue",
+                            "default": ()=>{return 6}
                         }
                     },
                     {

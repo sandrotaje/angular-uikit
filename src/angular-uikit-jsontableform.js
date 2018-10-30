@@ -1,4 +1,5 @@
 import "./angular-uikit-jsontableform.scss";
+
 var templateUrl = require('ngtemplate-loader!html-loader!./angular-uikit-jsontableform.html');
 var compactTemplateUrl = require('ngtemplate-loader!html-loader!./angular-uikit-jsontableform-compact.html');
 
@@ -66,14 +67,24 @@ export default function ukNgJsonTableForm($compile, $timeout) {
                 scope.newItem = {};
             };
 
-            
             scope.$watch('newItem', function () {
-                for(let h of scope.structure){
-                    if(h.default && scope.newItem && !scope.newItem[h.property]){
-                        scope.newItem[h.property] = typeof h.default === "function"?h.default(scope.parent, scope.newItem):h.default;
+                for (let h of scope.structure) {
+                    if (h.type === "ratio") {
+                        scope.injectDefault(h.first);
+                        scope.injectDefault(h.second);
+                    } else {
+                        scope.injectDefault(h)
                     }
                 }
             }, true);
+
+
+            scope.injectDefault = function (h) {
+                if (h.default && scope.newItem && !scope.newItem[h.property]) {
+                    scope.newItem[h.property] = typeof h.default === "function" ? h.default(scope.parent, scope.newItem) : h.default;
+                }
+
+            };
 
             scope.removeItem = function removeItem(index) {
                 UIkit.modal.confirm(scope.deleteConfirmLabel || "Are you sure?", function () {
@@ -96,7 +107,7 @@ export default function ukNgJsonTableForm($compile, $timeout) {
                     arr.forEach(function (s) {
                         if (s.type !== 'array') {
                             if (first) {
-                                firstRow.push({ colspan: 1 });
+                                firstRow.push({colspan: 1});
                             }
                             secondRow.push(s);
                         } else {
@@ -113,7 +124,7 @@ export default function ukNgJsonTableForm($compile, $timeout) {
                     });
                 };
                 recur(struct);
-                return { firstRow: firstRow, secondRow: secondRow };
+                return {firstRow: firstRow, secondRow: secondRow};
             };
 
             scope.objectify = function (el) {

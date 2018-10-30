@@ -7,7 +7,7 @@
                     <a ng-class="{'inactive': selectedIndex==null || selectedIndex==model.length-1}" ng-click="moveSelectedModelElementDown()" class="uk-text-primary uk-icon-small uk-icon-hover uk-icon-caret-down"></a>
                     <a ng-class="{'inactive': !selectedIndex}" ng-click="moveSelectedModelElementUp()" class="uk-text-primary uk-icon-hover uk-icon-caret-up uk-icon-small"></a>
                 </th>
-                <th data-ng-repeat="h in structure">
+                <th data-ng-repeat="h in structure" class="uk-text-nowrap">
                     <div ng-switch="h.type">
                         <div ng-switch-when="array" ng-init="table.hasChild = true"></div>
                         <span ng-switch-default><i ng-if="h.icon" class="uk-icon-{{h.icon}}"></i> {{h.label}}</span>
@@ -42,14 +42,16 @@
                             <div class="uk-accordion" ng-if="!readOnly || m[s.property].length>0"
                                  data-uk-accordion="{showfirst: false, collapse: false, toggle: '.uk-accordion-title-{{s.property}}', containers:'.uk-accordion-content-{{s.property}}'}">
                                 <a ng-init="accordion.show = false" ng-click="accordion.show=!accordion.show" class="uk-width-1-1 uk-button uk-button-primary uk-button-large uk-accordion-title-{{s.property}}">
-                                <span class="uk-float-left">
-                                    <i ng-if="s.icon" class="uk-icon-{{s.icon}}"></i> {{m[s.property].length}} {{s.label}}
-                                </span>
+                                    <div class="uk-flex uk-flex-space-between uk-flex-middle">
+                                        <div class="uk-text-nowrap">
+                                            <i ng-if="s.icon" class="uk-icon-{{s.icon}}"></i> {{m[s.property].length}} {{s.label}}
+                                        </div>
 
-                                <span class="uk-float-right">
-                                    <i ng-hide="accordion.show" class="uk-icon-caret-right"></i>
-                                    <i ng-show="accordion.show" class="uk-icon-caret-down"></i>
-                                </span>
+                                        <div>
+                                            <i ng-hide="accordion.show" class="uk-icon-caret-right"></i>
+                                            <i ng-show="accordion.show" class="uk-icon-caret-down"></i>
+                                        </div>
+                                    </div>
                                 </a>
                                 <div class="uk-accordion-content-{{s.property}}">
                                     <div data-uk-ng-json-table-form
@@ -140,6 +142,39 @@
                             </div>
                         </div>
 
+                        <!-- RATIO -->
+                        <div ng-switch-when="ratio" class="uk-grid uk-grid-collapse">
+                            <div class="uk-width-2-5">
+                                <input name="{{s.first.property}}"
+                                       data-ng-model="m[s.first.property]"
+                                       type="number"
+                                       class="uk-form-blank uk-text-right"
+                                       data-ng-max="{{s.first.number.max}}"
+                                       data-ng-min="{{s.first.number.min}}"
+                                       ng-required="s.first.required"
+                                       title="{{s.first.property}}"
+                                       ng-if="!readOnly">
+                                <div ng-if="readOnly">
+                                    {{m[s.first.property]}}
+                                </div>
+                            </div>
+                            <div class="uk-width-1-5 uk-text-center uk-text-large">:</div>
+                            <div class="uk-width-2-5">
+                                <input name="{{s.second.property}}"
+                                       data-ng-model="m[s.second.property]"
+                                       type="number"
+                                       class="uk-form-blank"
+                                       data-ng-max="{{s.second.number.max}}"
+                                       data-ng-min="{{s.second.number.min}}"
+                                       ng-required="s.second.required"
+                                       title="{{s.second.property}}"
+                                       ng-if="!readOnly">
+                                <div ng-if="readOnly">
+                                    {{m[s.second.property]}}
+                                </div>
+                            </div>
+                        </div>
+
                         <!-- TEMPLATE -->
 
                         <div ng-switch-when="template" my-ng-init="transcludeTemplate" m="m" s="s"></div>
@@ -226,6 +261,31 @@
                                data-ng-min="{{h.number.min}}"
                                ng-required="h.required"
                                title="{{h.property}}">
+
+
+                        <!-- RATIO -->
+                        <div ng-switch-when="ratio" class="uk-grid uk-grid-collapse">
+                            <div class="uk-width-2-5">
+                                <input name="{{h.first.property}}"
+                                       data-ng-model="newItem[h.first.property]"
+                                       type="number"
+                                       class="uk-text-right"
+                                       data-ng-max="{{h.first.number.max}}"
+                                       data-ng-min="{{h.first.number.min}}"
+                                       ng-required="h.first.required"
+                                       title="{{h.first.property}}">
+                            </div>
+                            <div class="uk-width-1-5 uk-text-center uk-text-large">:</div>
+                            <div class="uk-width-2-5">
+                                <input name="{{h.second.property}}"
+                                       data-ng-model="newItem[h.second.property]"
+                                       type="number"
+                                       data-ng-max="{{h.second.number.max}}"
+                                       data-ng-min="{{h.second.number.min}}"
+                                       ng-required="h.second.required"
+                                       title="{{h.second.property}}">
+                            </div>
+                        </div>
 
                         <!-- TEMPLATE -->
 
