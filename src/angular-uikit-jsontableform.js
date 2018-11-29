@@ -29,7 +29,6 @@ export default function ukNgJsonTableForm($compile, $timeout) {
         },
         link: function (scope, element, attrs, ctrl, $transcludeFn) {
 
-
             scope.transcludeTemplate = function (scp, elm) {
                 $transcludeFn(scp, function (clone) {
                     elm.append(clone);
@@ -67,23 +66,29 @@ export default function ukNgJsonTableForm($compile, $timeout) {
                 scope.newItem = {};
             };
 
-            scope.$watch('newItem', function () {
-                for (let h of scope.structure) {
-                    if (h.type === "ratio") {
-                        scope.injectDefault(h.first);
-                        scope.injectDefault(h.second);
-                    } else {
-                        scope.injectDefault(h)
-                    }
-                }
+            scope.$watch('parent', function () {
+                scope.injectDefaults(true)
             }, true);
 
+            scope.$watch('newItem', function () {
+                scope.injectDefaults(false)
+            }, true);
 
-            scope.injectDefault = function (h) {
-                if (h.default && scope.newItem && !scope.newItem[h.property]) {
+            scope.injectDefault = function (h, force) {
+                if (h.default && scope.newItem && (!scope.newItem[h.property] || force)) {
                     scope.newItem[h.property] = typeof h.default === "function" ? h.default(scope.parent, scope.newItem) : h.default;
                 }
+            };
 
+            scope.injectDefaults = function (force) {
+                for (let h of scope.structure) {
+                    if (h.type === "ratio") {
+                        scope.injectDefault(h.first, force);
+                        scope.injectDefault(h.second, force);
+                    } else {
+                        scope.injectDefault(h, force)
+                    }
+                }
             };
 
             scope.removeItem = function removeItem(index) {
@@ -158,6 +163,7 @@ export default function ukNgJsonTableForm($compile, $timeout) {
                 array[to] = array[from];
                 array[from] = temp;
             }
+
         }
     };
 }
