@@ -34,6 +34,10 @@ export default function ukNgPagination() {
                 pagination.pages = Math.ceil(scope.listSize / scope.pageSize);
                 pagination.render();
             });
+
+            scope.$watch('currentPage', function () {
+                pagination.currentPage = scope.currentPage;
+            })
         }
     };
 }
